@@ -1,0 +1,33 @@
+spring:
+  # profile ??
+  config:
+    activate:
+      on-profile: local
+
+  # datasource ??
+  datasource:
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    url: jdbc:mysql://localhost:3306/review-queue
+    username: review-queue
+    password: Zxcv1234!
+  jpa:
+    hibernate:
+      ddl-auto: update
+    properties:
+      hibernate:
+        format_sql: true
+        jdbc:
+          batch_size: 1000
+    show-sql: false
+
+  data:
+    redis:
+      host: localhost
+      port: 6379
+
+# ??? sql? ??
+logging:
+  level:
+    org.hibernate.SQL: debug
+    org.hibernate.type.descriptor.sql: trace
+    org.hibernate.orm.jdbc.bind: trace

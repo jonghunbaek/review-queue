@@ -1,0 +1,28 @@
+spring:
+  # profile 설정
+  config:
+    activate:
+      on-profile: test
+
+  # datasource 설정
+  jpa:
+    hibernate:
+      ddl-auto: create
+    show-sql: true
+    properties:
+      hibernate:
+        format_sql: true
+        jdbc:
+          batch_size: 1000
+    # hibernate 초기호 이후 data.sql 실행
+    defer-datasource-initialization: true
+
+  #Redis 설정
+  data:
+    redis:
+      host: localhost
+      port: 6379
+
+  sql:
+    init:
+      mode: always
