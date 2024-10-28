@@ -6,7 +6,7 @@ import lombok.Getter;
 @Getter
 public class GlobalException extends RuntimeException {
 
-    public static final String DETAIL_DELIMITER = " detail => ";
+    public static final String DETAIL_DELIMITER = " parameter => ";
 
     private String detailMessage;
     private ResponseCode responseCode;
