@@ -19,4 +19,9 @@ public class ReviewQueue {
 
     @ManyToOne
     private DailyStudy dailyStudy;
+
+    public ReviewQueue(LocalDateTime reviewDateTime, DailyStudy dailyStudy) {
+        this.reviewDateTime = reviewDateTime;
+        this.dailyStudy = dailyStudy;
+    }
 }

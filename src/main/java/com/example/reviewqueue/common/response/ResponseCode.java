@@ -3,7 +3,8 @@ package com.example.reviewqueue.common.response;
 import lombok.Getter;
 import org.springframework.http.HttpStatus;
 
-import static org.springframework.http.HttpStatus.*;
+import static org.springframework.http.HttpStatus.BAD_REQUEST;
+
 /*
  E0 ~ : Auth;
  E1 ~ : Domain
