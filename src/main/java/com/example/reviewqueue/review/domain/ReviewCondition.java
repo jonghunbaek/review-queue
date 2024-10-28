@@ -4,13 +4,14 @@ import com.example.reviewqueue.common.domain.BaseEntity;
 import com.example.reviewqueue.review.exception.ReviewException;
 import com.example.reviewqueue.study.domain.Study;
 import jakarta.persistence.*;
+import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 import static com.example.reviewqueue.common.response.ResponseCode.E13000;
 
 @Getter
-@NoArgsConstructor
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Entity
 public class ReviewCondition extends BaseEntity {
 
@@ -34,11 +35,11 @@ public class ReviewCondition extends BaseEntity {
     @ManyToOne
     private Study study;
 
-    private ReviewCondition(int reviewTime, int firstPeriod, int secondPeriod, int thirdPeriod, int fourthPeriod, int fifthPeriod, Study study) {
+    protected ReviewCondition(int reviewTime, ReviewPeriods reviewPeriods, Study study) {
         validateReviewTime(reviewTime);
 
         this.reviewTime = reviewTime;
-        this.reviewPeriods = new ReviewPeriods(firstPeriod, secondPeriod, thirdPeriod, fourthPeriod, fifthPeriod);
+        this.reviewPeriods = reviewPeriods;
         this.study = study;
     }
 
@@ -49,22 +50,27 @@ public class ReviewCondition extends BaseEntity {
     }
 
     public static ReviewCondition oneTime(int firstPeriod, Study study) {
-        return new ReviewCondition(1, firstPeriod, 0, 0, 0, 0, study);
+        ReviewPeriods reviewPeriods = new ReviewPeriods(firstPeriod, 0, 0, 0, 0);
+        return new ReviewCondition(1, reviewPeriods, study);
     }
 
     public static ReviewCondition twoTimes(int firstPeriod, int secondPeriod, Study study) {
-        return new ReviewCondition(2, firstPeriod, secondPeriod, 0, 0, 0,study);
+        ReviewPeriods reviewPeriods = new ReviewPeriods(firstPeriod, secondPeriod, 0, 0, 0);
+        return new ReviewCondition(2, reviewPeriods, study);
     }
 
     public static ReviewCondition threeTimes(int firstPeriod, int secondPeriod, int thirdPeriod, Study study) {
-        return new ReviewCondition(3, firstPeriod, secondPeriod, thirdPeriod, 0, 0, study);
+        ReviewPeriods reviewPeriods = new ReviewPeriods(firstPeriod, secondPeriod, thirdPeriod, 0, 0);
+        return new ReviewCondition(3, reviewPeriods, study);
     }
 
     public static ReviewCondition fourTimes(int firstPeriod, int secondPeriod, int thirdPeriod, int fourthPeriod, Study study) {
-        return new ReviewCondition(4, firstPeriod, secondPeriod, thirdPeriod, fourthPeriod, 0, study);
+        ReviewPeriods reviewPeriods = new ReviewPeriods(firstPeriod, secondPeriod, thirdPeriod, fourthPeriod, 0);
+        return new ReviewCondition(4, reviewPeriods, study);
     }
 
     public static ReviewCondition fifthTimes(int firstPeriod, int secondPeriod, int thirdPeriod, int fourthPeriod, int fifthPeriod, Study study) {
-        return new ReviewCondition(5, firstPeriod, secondPeriod, thirdPeriod, fourthPeriod, fifthPeriod, study);
+        ReviewPeriods reviewPeriods = new ReviewPeriods(firstPeriod, secondPeriod, thirdPeriod, fourthPeriod, fifthPeriod);
+        return new ReviewCondition(5, reviewPeriods, study);
     }
 }
