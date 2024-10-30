@@ -44,6 +44,10 @@ public class StudyService {
                 .toList();
     }
 
+    public void deleteStudyById(Long studyId) {
+        studyRepository.deleteById(studyId);
+    }
+
     private Study findStudyById(Long studyId) {
         return studyRepository.findById(studyId)
                 .orElseThrow(() -> new StudyException("studyId :: " + studyId, E11000));
