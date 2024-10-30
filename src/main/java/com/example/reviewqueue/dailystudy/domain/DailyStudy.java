@@ -18,6 +18,11 @@ public class DailyStudy extends BaseEntity {
     private Long id;
 
     /**
+     *  학습 범위
+     */
+    private String studyRange;
+
+    /**
      *  학습 일시
      */
     private LocalDateTime studyDateTime;
@@ -25,7 +30,8 @@ public class DailyStudy extends BaseEntity {
     @ManyToOne
     private Study study;
 
-    public DailyStudy(LocalDateTime studyDateTime, Study study) {
+    public DailyStudy(String studyRange, LocalDateTime studyDateTime, Study study) {
+        this.studyRange = studyRange;
         this.studyDateTime = studyDateTime;
         this.study = study;
     }

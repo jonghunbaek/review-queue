@@ -17,7 +17,7 @@ public class StudyKeyword extends BaseEntity {
     /**
      *  학습 키워드
      */
-    private String keywords;
+    private String keyword;
 
     /**
      *  학습 키워드 설명
@@ -27,8 +27,8 @@ public class StudyKeyword extends BaseEntity {
     @ManyToOne
     private DailyStudy dailyStudy;
 
-    public StudyKeyword(String keywords, String description, DailyStudy dailyStudy) {
-        this.keywords = keywords;
+    public StudyKeyword(String keyword, String description, DailyStudy dailyStudy) {
+        this.keyword = keyword;
         this.description = description;
         this.dailyStudy = dailyStudy;
     }
