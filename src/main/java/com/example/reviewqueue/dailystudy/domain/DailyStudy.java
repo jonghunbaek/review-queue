@@ -17,6 +17,9 @@ public class DailyStudy extends BaseEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    /**
+     *  학습 일시
+     */
     private LocalDateTime studyDateTime;
 
     @ManyToOne

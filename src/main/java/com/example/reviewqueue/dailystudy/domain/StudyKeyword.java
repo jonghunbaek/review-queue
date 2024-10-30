@@ -14,8 +14,14 @@ public class StudyKeyword extends BaseEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    /**
+     *  학습 키워드
+     */
     private String keywords;
 
+    /**
+     *  학습 키워드 설명
+     */
     private String description;
 
     @ManyToOne
