@@ -8,7 +8,7 @@ import lombok.NoArgsConstructor;
 @Getter
 @NoArgsConstructor
 @Entity
-public class StudyContent extends BaseEntity {
+public class StudyKeyword extends BaseEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -21,7 +21,7 @@ public class StudyContent extends BaseEntity {
     @ManyToOne
     private DailyStudy dailyStudy;
 
-    public StudyContent(String keywords, String description, DailyStudy dailyStudy) {
+    public StudyKeyword(String keywords, String description, DailyStudy dailyStudy) {
         this.keywords = keywords;
         this.description = description;
         this.dailyStudy = dailyStudy;

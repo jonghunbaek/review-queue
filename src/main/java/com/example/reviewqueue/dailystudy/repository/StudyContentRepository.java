@@ -1,7 +1,7 @@
 package com.example.reviewqueue.dailystudy.repository;
 
-import com.example.reviewqueue.dailystudy.domain.StudyContent;
+import com.example.reviewqueue.dailystudy.domain.StudyKeyword;
 import org.springframework.data.jpa.repository.JpaRepository;
 
-public interface StudyContentRepository extends JpaRepository<StudyContent, Long> {
+public interface StudyContentRepository extends JpaRepository<StudyKeyword, Long> {
 }
