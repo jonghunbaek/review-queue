@@ -1,4 +1,4 @@
-package com.example.reviewqueue.review.domain;
+package com.example.reviewqueue.reviewqueue.domain;
 
 import com.example.reviewqueue.common.domain.BaseEntity;
 import com.example.reviewqueue.dailystudy.domain.DailyStudy;
