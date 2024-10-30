@@ -21,6 +21,10 @@ import static org.springframework.http.HttpStatus.BAD_REQUEST;
 @Getter
 public enum ResponseCode {
 
+    E10000("조회할 수 있는 회원이 없습니다.", BAD_REQUEST),
+
+    E11000("조회할 수 있는 학습이 없습니다.", BAD_REQUEST),
+
     E13000("복습 횟수의 범위가 잘못 지정됐습니다.", BAD_REQUEST),
     E13001("복습 주기의 범위가 잘못 지정됐습니다.", BAD_REQUEST);
 
