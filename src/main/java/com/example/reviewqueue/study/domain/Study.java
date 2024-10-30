@@ -3,11 +3,12 @@ package com.example.reviewqueue.study.domain;
 import com.example.reviewqueue.common.domain.BaseEntity;
 import com.example.reviewqueue.member.domain.Member;
 import jakarta.persistence.*;
+import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 @Getter
-@NoArgsConstructor
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Entity
 public class Study extends BaseEntity {
 
@@ -33,9 +34,10 @@ public class Study extends BaseEntity {
     @ManyToOne
     private Member member;
 
-    public Study(StudyType studyType, String title, String description) {
+    public Study(StudyType studyType, String title, String description, Member member) {
         this.studyType = studyType;
         this.title = title;
         this.description = description;
+        this.member = member;
     }
 }
