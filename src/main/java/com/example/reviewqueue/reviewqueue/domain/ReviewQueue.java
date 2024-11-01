@@ -4,13 +4,14 @@ import com.example.reviewqueue.common.domain.BaseEntity;
 import com.example.reviewqueue.dailystudy.domain.DailyStudy;
 import com.example.reviewqueue.member.domain.Member;
 import jakarta.persistence.*;
+import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 import java.time.LocalDate;
 
 @Getter
-@NoArgsConstructor
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Entity
 public class ReviewQueue extends BaseEntity {
 
@@ -38,10 +39,10 @@ public class ReviewQueue extends BaseEntity {
     @ManyToOne
     private Member member;
 
-    public ReviewQueue(LocalDate previousReviewDate, LocalDate reviewDate, boolean isCompleted, DailyStudy dailyStudy) {
+    public ReviewQueue(LocalDate previousReviewDate, LocalDate reviewDate, DailyStudy dailyStudy) {
         this.previousReviewDate = previousReviewDate;
         this.reviewDate = reviewDate;
-        this.isCompleted = isCompleted;
+        this.isCompleted = false;
         this.dailyStudy = dailyStudy;
         this.member = dailyStudy.getStudy().getMember();
     }
