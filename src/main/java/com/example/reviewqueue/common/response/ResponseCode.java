@@ -25,8 +25,11 @@ public enum ResponseCode {
 
     E11000("조회할 수 있는 학습이 없습니다.", BAD_REQUEST),
 
+    E12000("조회할 수 있는 일일 학습이 없습니다.",BAD_REQUEST),
+
     E13000("복습 횟수의 범위가 잘못 지정됐습니다.", BAD_REQUEST),
-    E13001("복습 주기의 범위가 잘못 지정됐습니다.", BAD_REQUEST);
+    E13001("복습 주기의 범위가 잘못 지정됐습니다.", BAD_REQUEST),
+    E13002("복습 횟수와 복습 주기 개수가 일치하지 않습니다.", BAD_REQUEST);
 
     private String message;
     private HttpStatus httpStatus;
