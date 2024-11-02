@@ -14,6 +14,11 @@ public class DailyStudySave {
     private Long studyId;
     private String studyRange;
 
+    public DailyStudySave(Long studyId, String studyRange) {
+        this.studyId = studyId;
+        this.studyRange = studyRange;
+    }
+
     public DailyStudy toEntity(Study study) {
         return new DailyStudy(studyRange, LocalDateTime.now(), study);
     }
