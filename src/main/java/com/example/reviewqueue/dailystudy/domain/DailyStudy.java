@@ -3,13 +3,14 @@ package com.example.reviewqueue.dailystudy.domain;
 import com.example.reviewqueue.common.domain.BaseEntity;
 import com.example.reviewqueue.study.domain.Study;
 import jakarta.persistence.*;
+import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 import java.time.LocalDateTime;
 
 @Getter
-@NoArgsConstructor
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Entity
 public class DailyStudy extends BaseEntity {
 

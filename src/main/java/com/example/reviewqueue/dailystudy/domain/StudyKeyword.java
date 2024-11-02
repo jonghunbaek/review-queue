@@ -2,11 +2,12 @@ package com.example.reviewqueue.dailystudy.domain;
 
 import com.example.reviewqueue.common.domain.BaseEntity;
 import jakarta.persistence.*;
+import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 @Getter
-@NoArgsConstructor
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Entity
 public class StudyKeyword extends BaseEntity {
 
