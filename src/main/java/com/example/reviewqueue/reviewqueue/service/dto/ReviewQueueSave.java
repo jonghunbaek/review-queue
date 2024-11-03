@@ -6,6 +6,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 import java.util.List;
+import java.util.stream.Stream;
 
 @NoArgsConstructor
 @Getter
@@ -13,16 +14,27 @@ public class ReviewQueueSave {
 
     private Long dailyStudyId;
     private Integer reviewTimes;
-    // TODO :: 순서가 뒤바뀌는 것에 대한 검증은 어떻게?
-    private List<Integer> periods;
+    private int firstPeriod;
+    private int secondPeriod;
+    private int thirdPeriod;
+    private int fourthPeriod;
+    private int fifthPeriod;
 
-    public ReviewQueueSave(Long dailyStudyId, Integer reviewTimes, List<Integer> periods) {
+    public ReviewQueueSave(Long dailyStudyId, Integer reviewTimes, int firstPeriod, int secondPeriod, int thirdPeriod, int fourthPeriod, int fifthPeriod) {
         this.dailyStudyId = dailyStudyId;
         this.reviewTimes = reviewTimes;
-        this.periods = periods;
+        this.firstPeriod = firstPeriod;
+        this.secondPeriod = secondPeriod;
+        this.thirdPeriod = thirdPeriod;
+        this.fourthPeriod = fourthPeriod;
+        this.fifthPeriod = fifthPeriod;
     }
 
     public ReviewCondition toReviewCondition(DailyStudy dailyStudy) {
+        List<Integer> periods = Stream.of(firstPeriod, secondPeriod, thirdPeriod, fourthPeriod, fifthPeriod)
+                .filter(period -> period > 0)
+                .toList();
+
         return new ReviewCondition(reviewTimes, periods, dailyStudy);
     }
 }

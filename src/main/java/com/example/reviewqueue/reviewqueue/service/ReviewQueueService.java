@@ -15,7 +15,7 @@ import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
-import static com.example.reviewqueue.common.response.ResponseCode.*;
+import static com.example.reviewqueue.common.response.ResponseCode.E12000;
 
 @RequiredArgsConstructor
 @Transactional
@@ -25,24 +25,30 @@ public class ReviewQueueService {
     private final ReviewQueueRepository reviewQueueRepository;
     private final DailyStudyRepository dailyStudyRepository;
 
-    // TODO :: Stream API로 로직 개선 필요
     public void save(ReviewQueueSave reviewQueueSave) {
         DailyStudy dailyStudy = findDailyStudyBy(reviewQueueSave.getDailyStudyId());
         ReviewCondition reviewCondition = reviewQueueSave.toReviewCondition(dailyStudy);
 
-        List<ReviewQueue> reviewQueues = new ArrayList<>();
-        LocalDate previousReviewDate = dailyStudy.getStudyDateTime().toLocalDate();
-        for (int i = 0; i < reviewCondition.getReviewTimes(); i++) {
-            Integer period = reviewCondition.getPeriods().get(i);
-            LocalDate nextReviewDate = previousReviewDate.plusDays(period);
+        LocalDate startDate = dailyStudy.getStudyDateTime().toLocalDate();
+        List<ReviewQueue> reviewQueues = reviewCondition.getPeriods().stream()
+                .reduce(new ArrayList<>(List.of(new ReviewQueue(null, startDate, dailyStudy))),
+                        (queues, period) -> addNextReview(queues, period, dailyStudy),
+                        (a, b) -> a
+                );
 
-            ReviewQueue reviewQueue = new ReviewQueue(previousReviewDate, nextReviewDate, dailyStudy);
-            reviewQueues.add(reviewQueue);
-
-            previousReviewDate = nextReviewDate;
-        }
+        // 첫 번째 요소는 초기값이므로 제거
+        reviewQueues.remove(0);
 
         reviewQueueRepository.saveAll(reviewQueues);
+    }
+
+    private ArrayList<ReviewQueue> addNextReview(ArrayList<ReviewQueue> reviewQueues, int period, DailyStudy dailyStudy) {
+        LocalDate lastReviewDate = reviewQueues.get(reviewQueues.size() - 1).getReviewDate();
+        LocalDate nextReviewDate = lastReviewDate.plusDays(period);
+
+        reviewQueues.add(new ReviewQueue(lastReviewDate, nextReviewDate, dailyStudy));
+
+        return reviewQueues;
     }
 
     private DailyStudy findDailyStudyBy(Long dailStudyId) {
