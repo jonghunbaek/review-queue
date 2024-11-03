@@ -15,24 +15,37 @@ public class ReviewCondition {
     public static final int MAX_REVIEW_PERIOD = 14;
     public static final int MIN_REVIEW_PERIOD = 1;
 
-    private Integer reviewTimes;
+    private int reviewTimes;
     
     private List<Integer> periods;
     
     private DailyStudy dailyStudy;
 
-    // TODO :: 검증기 추가 필요함
-    public ReviewCondition(Integer reviewTimes, List<Integer> periods, DailyStudy dailyStudy) {
+    public ReviewCondition(int reviewTimes, List<Integer> periods, DailyStudy dailyStudy) {
         validateReviewTimes(reviewTimes, periods);
+        validateReviewPeriods(periods);
 
-        this.dailyStudy = dailyStudy;
         this.reviewTimes = reviewTimes;
         this.periods = periods;
+        this.dailyStudy = dailyStudy;
     }
 
-    private void validateReviewTimes(Integer reviewTimes, List<Integer> periods) {
+    private void validateReviewTimes(int reviewTimes, List<Integer> periods) {
         if (reviewTimes != periods.size()) {
+            throw new ReviewException(ResponseCode.E13002);
+        }
+
+        if (reviewTimes < MIN_REVIEW_TIMES || reviewTimes > MAX_REVIEW_TIMES) {
             throw new ReviewException(ResponseCode.E13000);
+        }
+    }
+
+    private void validateReviewPeriods(List<Integer> periods) {
+        boolean isPresentIncorrectPeriod = periods.stream()
+                .anyMatch(period -> period < MIN_REVIEW_PERIOD || period > MAX_REVIEW_PERIOD);
+
+        if (isPresentIncorrectPeriod) {
+            throw new ReviewException(ResponseCode.E13001);
         }
     }
 }

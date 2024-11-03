@@ -27,7 +27,6 @@ public class DailyStudyService {
     private final DailyStudyRepository dailyStudyRepository;
     private final StudyKeywordRepository studyKeywordRepository;
 
-    // TODO :: 테스트 작성해야 함
     public DailyStudyInfo save(DailyStudySave dailyStudySave, List<StudyKeywordSave> studyKeywordsSave) {
         Study study = findStudyById(dailyStudySave.getStudyId());
         DailyStudy dailyStudy = dailyStudyRepository.save(dailyStudySave.toEntity(study));
