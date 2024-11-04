@@ -17,16 +17,16 @@ public class ReviewCondition {
 
     private int reviewTimes;
     
-    private List<Integer> periods;
+    private List<Integer> reviewPeriods;
     
     private DailyStudy dailyStudy;
 
-    public ReviewCondition(int reviewTimes, List<Integer> periods, DailyStudy dailyStudy) {
-        validateReviewTimes(reviewTimes, periods);
-        validateReviewPeriods(periods);
+    public ReviewCondition(int reviewTimes, List<Integer> reviewPeriods, DailyStudy dailyStudy) {
+        validateReviewTimes(reviewTimes, reviewPeriods);
+        validateReviewPeriods(reviewPeriods);
 
         this.reviewTimes = reviewTimes;
-        this.periods = periods;
+        this.reviewPeriods = reviewPeriods;
         this.dailyStudy = dailyStudy;
     }
 

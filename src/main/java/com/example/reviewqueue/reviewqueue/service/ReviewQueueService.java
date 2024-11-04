@@ -30,7 +30,7 @@ public class ReviewQueueService {
         ReviewCondition reviewCondition = reviewQueueSave.toReviewCondition(dailyStudy);
 
         LocalDate startDate = dailyStudy.getStudyDateTime().toLocalDate();
-        List<ReviewQueue> reviewQueues = reviewCondition.getPeriods().stream()
+        List<ReviewQueue> reviewQueues = reviewCondition.getReviewPeriods().stream()
                 .reduce(new ArrayList<>(List.of(new ReviewQueue(null, startDate, dailyStudy))),
                         (queues, period) -> addNextReview(queues, period, dailyStudy),
                         (a, b) -> a
