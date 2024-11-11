@@ -3,6 +3,7 @@ package com.example.reviewqueue.reviewqueue.repository;
 import org.springframework.stereotype.Repository;
 import org.springframework.web.servlet.mvc.method.annotation.SseEmitter;
 
+import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.concurrent.ConcurrentHashMap;
@@ -18,6 +19,11 @@ public class SseEmitterMapRepository implements SseEmitterRepository {
     @Override
     public Optional<SseEmitter> findByUserId(Long userId) {
         return Optional.ofNullable(emitters.get(userId));
+    }
+
+    @Override
+    public List<SseEmitter> findAll() {
+        return emitters.values().stream().toList();
     }
 
     @Override
