@@ -6,6 +6,7 @@ import com.example.reviewqueue.dailystudy.repository.DailyStudyRepository;
 import com.example.reviewqueue.reviewqueue.domain.ReviewCondition;
 import com.example.reviewqueue.reviewqueue.domain.ReviewQueue;
 import com.example.reviewqueue.reviewqueue.repository.ReviewQueueRepository;
+import com.example.reviewqueue.reviewqueue.service.dto.ReviewData;
 import com.example.reviewqueue.reviewqueue.service.dto.ReviewQueueSave;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -54,5 +55,10 @@ public class ReviewQueueService {
     private DailyStudy findDailyStudyBy(Long dailStudyId) {
         return dailyStudyRepository.findById(dailStudyId)
                 .orElseThrow(() -> new DailyStudyException("dailyStudyId :: " + dailStudyId, E12000));
+    }
+
+    public List<ReviewData> findAllReviewDataByData(LocalDate targetDate) {
+
+        return null;
     }
 }
