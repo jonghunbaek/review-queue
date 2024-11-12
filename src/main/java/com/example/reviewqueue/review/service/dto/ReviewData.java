@@ -1,4 +1,4 @@
-package com.example.reviewqueue.reviewqueue.service.dto;
+package com.example.reviewqueue.review.service.dto;
 
 import lombok.Getter;
 

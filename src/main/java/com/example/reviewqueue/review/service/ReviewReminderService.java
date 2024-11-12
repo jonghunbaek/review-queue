@@ -1,6 +1,6 @@
-package com.example.reviewqueue.reviewqueue.service;
+package com.example.reviewqueue.review.service;
 
-import com.example.reviewqueue.reviewqueue.repository.SseEmitterRepository;
+import com.example.reviewqueue.review.repository.SseEmitterRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
@@ -14,7 +14,7 @@ public class ReviewReminderService {
 
     public static final long TIME_OUT_MILLIS = 30 * 60 * 1000L;
 
-    private final ReviewQueueService reviewQueueService;
+    private final ReviewService reviewService;
     private final SseEmitterRepository sseEmitterRepository;
 
     public SseEmitter subscribe(Long userId) {

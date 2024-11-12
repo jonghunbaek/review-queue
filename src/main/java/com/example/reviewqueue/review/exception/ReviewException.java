@@ -1,4 +1,4 @@
-package com.example.reviewqueue.reviewqueue.exception;
+package com.example.reviewqueue.review.exception;
 
 import com.example.reviewqueue.common.exception.GlobalException;
 import com.example.reviewqueue.common.response.ResponseCode;

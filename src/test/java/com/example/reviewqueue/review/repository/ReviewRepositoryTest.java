@@ -1,10 +1,10 @@
-package com.example.reviewqueue.reviewqueue.repository;
+package com.example.reviewqueue.review.repository;
 
 import com.example.reviewqueue.dailystudy.domain.DailyStudy;
 import com.example.reviewqueue.dailystudy.domain.StudyKeyword;
 import com.example.reviewqueue.dailystudy.repository.DailyStudyRepository;
 import com.example.reviewqueue.dailystudy.repository.StudyKeywordRepository;
-import com.example.reviewqueue.reviewqueue.domain.ReviewQueue;
+import com.example.reviewqueue.review.domain.Review;
 import com.example.reviewqueue.study.domain.Study;
 import com.example.reviewqueue.study.repository.StudyRepository;
 import org.junit.jupiter.api.DisplayName;
@@ -20,7 +20,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 @ActiveProfiles("test")
 @DataJpaTest
-class ReviewQueueRepositoryTest {
+class ReviewRepositoryTest {
 
     @Autowired
     private StudyRepository studyRepository;
@@ -32,7 +32,7 @@ class ReviewQueueRepositoryTest {
     private StudyKeywordRepository studyKeywordRepository;
 
     @Autowired
-    private ReviewQueueRepository reviewQueueRepository;
+    private ReviewRepository reviewRepository;
 
     @DisplayName("복습날짜에 해당하는 모든 복습을 가져온다.")
     @Test
@@ -49,12 +49,12 @@ class ReviewQueueRepositoryTest {
         StudyKeyword keyword4 = new StudyKeyword("세컨더리 인덱스", "PK 이외의 인덱스", dailyStudy2);
         studyKeywordRepository.saveAll(List.of(keyword1, keyword2, keyword3, keyword4));
 
-        reviewQueueRepository.save(new ReviewQueue(LocalDate.of(2024, 11, 1), LocalDate.of(2024, 11, 2), dailyStudy1));
-        reviewQueueRepository.save(new ReviewQueue(LocalDate.of(2024, 11, 1), LocalDate.of(2024, 11, 2), dailyStudy2));
+        reviewRepository.save(new Review(LocalDate.of(2024, 11, 1), LocalDate.of(2024, 11, 2), dailyStudy1));
+        reviewRepository.save(new Review(LocalDate.of(2024, 11, 1), LocalDate.of(2024, 11, 2), dailyStudy2));
 
         // when
         LocalDate targetDate = LocalDate.of(2024, 11, 2);
-        List<ReviewQueue> reviews = reviewQueueRepository.findAllByReviewDate(targetDate);
+        List<Review> reviews = reviewRepository.findAllByReviewDate(targetDate);
 
         // then
         assertThat(reviews).hasSize(2);

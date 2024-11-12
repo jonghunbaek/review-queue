@@ -1,6 +1,6 @@
-package com.example.reviewqueue.reviewqueue.controller;
+package com.example.reviewqueue.review.controller;
 
-import com.example.reviewqueue.reviewqueue.service.ReviewReminderService;
+import com.example.reviewqueue.review.service.ReviewReminderService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;

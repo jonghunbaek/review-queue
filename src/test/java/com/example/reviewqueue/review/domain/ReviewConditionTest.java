@@ -1,6 +1,6 @@
-package com.example.reviewqueue.reviewqueue.domain;
+package com.example.reviewqueue.review.domain;
 
-import com.example.reviewqueue.reviewqueue.exception.ReviewException;
+import com.example.reviewqueue.review.exception.ReviewException;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;

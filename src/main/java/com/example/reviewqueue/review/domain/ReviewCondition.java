@@ -1,8 +1,8 @@
-package com.example.reviewqueue.reviewqueue.domain;
+package com.example.reviewqueue.review.domain;
 
 import com.example.reviewqueue.common.response.ResponseCode;
 import com.example.reviewqueue.dailystudy.domain.DailyStudy;
-import com.example.reviewqueue.reviewqueue.exception.ReviewException;
+import com.example.reviewqueue.review.exception.ReviewException;
 import lombok.Getter;
 
 import java.util.List;

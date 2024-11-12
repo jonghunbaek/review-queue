@@ -1,13 +1,13 @@
-package com.example.reviewqueue.reviewqueue.service;
+package com.example.reviewqueue.review.service;
 
 import com.example.reviewqueue.dailystudy.domain.DailyStudy;
 import com.example.reviewqueue.dailystudy.domain.StudyKeyword;
 import com.example.reviewqueue.dailystudy.repository.DailyStudyRepository;
 import com.example.reviewqueue.dailystudy.repository.StudyKeywordRepository;
-import com.example.reviewqueue.reviewqueue.domain.ReviewQueue;
-import com.example.reviewqueue.reviewqueue.repository.ReviewQueueRepository;
-import com.example.reviewqueue.reviewqueue.service.dto.ReviewData;
-import com.example.reviewqueue.reviewqueue.service.dto.ReviewQueueSave;
+import com.example.reviewqueue.review.domain.Review;
+import com.example.reviewqueue.review.repository.ReviewRepository;
+import com.example.reviewqueue.review.service.dto.ReviewData;
+import com.example.reviewqueue.review.service.dto.ReviewQueueSave;
 import com.example.reviewqueue.study.domain.Study;
 import com.example.reviewqueue.study.repository.StudyRepository;
 import org.junit.jupiter.api.DisplayName;
@@ -26,10 +26,10 @@ import static org.junit.jupiter.api.Assertions.*;
 @ActiveProfiles("test")
 @Transactional
 @SpringBootTest
-class ReviewQueueServiceTest {
+class ReviewServiceTest {
 
     @Autowired
-    private ReviewQueueService reviewQueueService;
+    private ReviewService reviewService;
 
     @Autowired
     private DailyStudyRepository dailyStudyRepository;
@@ -41,7 +41,7 @@ class ReviewQueueServiceTest {
     private StudyRepository studyRepository;
 
     @Autowired
-    private ReviewQueueRepository reviewQueueRepository;
+    private ReviewRepository reviewRepository;
 
     @DisplayName("복습 조건에 따라 복습할 학습을 저장한다.")
     @Test
@@ -53,11 +53,11 @@ class ReviewQueueServiceTest {
         ReviewQueueSave reviewQueueSave = new ReviewQueueSave(dailyStudy.getId(), 5, 1, 2, 3, 4, 5);
 
         // when
-        reviewQueueService.save(reviewQueueSave);
-        List<ReviewQueue> reviewQueues = reviewQueueRepository.findAll();
+        reviewService.save(reviewQueueSave);
+        List<Review> reviews = reviewRepository.findAll();
 
         // then
-        assertThat(reviewQueues).hasSize(5)
+        assertThat(reviews).hasSize(5)
                 .extracting("reviewDate")
                 .containsExactlyInAnyOrder(
                         LocalDate.of(2024, 11, 1),
@@ -85,12 +85,12 @@ class ReviewQueueServiceTest {
 
         ReviewQueueSave reviewQueueSave1 = new ReviewQueueSave(dailyStudy1.getId(), 5, 1, 2, 3, 4, 5);
         ReviewQueueSave reviewQueueSave2 = new ReviewQueueSave(dailyStudy2.getId(), 5, 1, 2, 3, 4, 5);
-        reviewQueueService.save(reviewQueueSave1);
-        reviewQueueService.save(reviewQueueSave2);
+        reviewService.save(reviewQueueSave1);
+        reviewService.save(reviewQueueSave2);
 
         // when
         LocalDate targetDate = LocalDate.of(2024, 11, 2);
-        List<ReviewData> reviewDatas = reviewQueueService.findAllReviewDataByData(targetDate);
+        List<ReviewData> reviewDatas = reviewService.findAllReviewDataByData(targetDate);
 
         // then
         assertAll(

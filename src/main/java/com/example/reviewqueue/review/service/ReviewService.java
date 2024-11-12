@@ -1,13 +1,13 @@
-package com.example.reviewqueue.reviewqueue.service;
+package com.example.reviewqueue.review.service;
 
 import com.example.reviewqueue.dailystudy.domain.DailyStudy;
 import com.example.reviewqueue.dailystudy.exception.DailyStudyException;
 import com.example.reviewqueue.dailystudy.repository.DailyStudyRepository;
-import com.example.reviewqueue.reviewqueue.domain.ReviewCondition;
-import com.example.reviewqueue.reviewqueue.domain.ReviewQueue;
-import com.example.reviewqueue.reviewqueue.repository.ReviewQueueRepository;
-import com.example.reviewqueue.reviewqueue.service.dto.ReviewData;
-import com.example.reviewqueue.reviewqueue.service.dto.ReviewQueueSave;
+import com.example.reviewqueue.review.domain.ReviewCondition;
+import com.example.reviewqueue.review.domain.Review;
+import com.example.reviewqueue.review.repository.ReviewRepository;
+import com.example.reviewqueue.review.service.dto.ReviewData;
+import com.example.reviewqueue.review.service.dto.ReviewQueueSave;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -21,9 +21,9 @@ import static com.example.reviewqueue.common.response.ResponseCode.E12000;
 @RequiredArgsConstructor
 @Transactional
 @Service
-public class ReviewQueueService {
+public class ReviewService {
 
-    private final ReviewQueueRepository reviewQueueRepository;
+    private final ReviewRepository reviewRepository;
     private final DailyStudyRepository dailyStudyRepository;
 
     public void save(ReviewQueueSave reviewQueueSave) {
@@ -31,25 +31,25 @@ public class ReviewQueueService {
         ReviewCondition reviewCondition = reviewQueueSave.toReviewCondition(dailyStudy);
 
         LocalDate startDate = dailyStudy.getStudyDateTime().toLocalDate();
-        List<ReviewQueue> reviewQueues = reviewCondition.getReviewPeriods().stream()
-                .reduce(new ArrayList<>(List.of(new ReviewQueue(null, startDate, dailyStudy))),
+        List<Review> reviews = reviewCondition.getReviewPeriods().stream()
+                .reduce(new ArrayList<>(List.of(new Review(null, startDate, dailyStudy))),
                         (queues, period) -> addNextReview(queues, period, dailyStudy),
                         (a, b) -> a
                 );
 
         // 첫 번째 요소는 초기값이므로 제거
-        reviewQueues.remove(0);
+        reviews.remove(0);
 
-        reviewQueueRepository.saveAll(reviewQueues);
+        reviewRepository.saveAll(reviews);
     }
 
-    private ArrayList<ReviewQueue> addNextReview(ArrayList<ReviewQueue> reviewQueues, int period, DailyStudy dailyStudy) {
-        LocalDate lastReviewDate = reviewQueues.get(reviewQueues.size() - 1).getReviewDate();
+    private ArrayList<Review> addNextReview(ArrayList<Review> reviews, int period, DailyStudy dailyStudy) {
+        LocalDate lastReviewDate = reviews.get(reviews.size() - 1).getReviewDate();
         LocalDate nextReviewDate = lastReviewDate.plusDays(period);
 
-        reviewQueues.add(new ReviewQueue(lastReviewDate, nextReviewDate, dailyStudy));
+        reviews.add(new Review(lastReviewDate, nextReviewDate, dailyStudy));
 
-        return reviewQueues;
+        return reviews;
     }
 
     private DailyStudy findDailyStudyBy(Long dailStudyId) {

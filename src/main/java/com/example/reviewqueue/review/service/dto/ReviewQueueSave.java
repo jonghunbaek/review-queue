@@ -1,7 +1,7 @@
-package com.example.reviewqueue.reviewqueue.service.dto;
+package com.example.reviewqueue.review.service.dto;
 
 import com.example.reviewqueue.dailystudy.domain.DailyStudy;
-import com.example.reviewqueue.reviewqueue.domain.ReviewCondition;
+import com.example.reviewqueue.review.domain.ReviewCondition;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 

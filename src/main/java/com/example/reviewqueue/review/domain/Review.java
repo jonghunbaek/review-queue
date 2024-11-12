@@ -1,4 +1,4 @@
-package com.example.reviewqueue.reviewqueue.domain;
+package com.example.reviewqueue.review.domain;
 
 import com.example.reviewqueue.common.domain.BaseEntity;
 import com.example.reviewqueue.dailystudy.domain.DailyStudy;
@@ -13,7 +13,7 @@ import java.time.LocalDate;
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Entity
-public class ReviewQueue extends BaseEntity {
+public class Review extends BaseEntity {
 
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -39,7 +39,7 @@ public class ReviewQueue extends BaseEntity {
     @ManyToOne
     private Member member;
 
-    public ReviewQueue(LocalDate previousReviewDate, LocalDate reviewDate, DailyStudy dailyStudy) {
+    public Review(LocalDate previousReviewDate, LocalDate reviewDate, DailyStudy dailyStudy) {
         this.previousReviewDate = previousReviewDate;
         this.reviewDate = reviewDate;
         this.isCompleted = false;
