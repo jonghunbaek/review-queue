@@ -9,7 +9,6 @@ import com.example.reviewqueue.dailystudy.service.dto.StudyKeywordSave;
 import com.example.reviewqueue.member.domain.Member;
 import com.example.reviewqueue.member.repository.MemberRepository;
 import com.example.reviewqueue.study.domain.Study;
-import com.example.reviewqueue.study.domain.StudyType;
 import com.example.reviewqueue.study.repository.StudyRepository;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -48,7 +47,7 @@ class DailyStudyServiceTest {
     void saveDailyStudyAndKeywords() {
         // given
         Member member = memberRepository.findAll().get(0);
-        Study study = studyRepository.save(new Study(StudyType.BOOK, "Real MySQL", "MySQL 관련 도서", member));
+        Study study = studyRepository.findAll().get(0);
         DailyStudySave dailyStudySave = new DailyStudySave(1L, "8.인덱스(p230 ~ p250");
         StudyKeywordSave keyword1 = new StudyKeywordSave("B-Tree 인덱스", "조회 성능을 높이기 위한 인덱스");
         StudyKeywordSave keyword2 = new StudyKeywordSave("R-Tree 인덱스", "공간 정보를 다루기 위한 인덱스");
