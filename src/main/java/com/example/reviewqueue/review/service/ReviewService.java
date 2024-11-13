@@ -52,13 +52,16 @@ public class ReviewService {
         return reviews;
     }
 
+    public List<ReviewData> findAllReviewDataByDate(LocalDate reviewDate) {
+        List<Review> reviews = reviewRepository.findAllByReviewDate(reviewDate);
+
+        return reviews.stream()
+                .map(ReviewData::of)
+                .toList();
+    }
+
     private DailyStudy findDailyStudyBy(Long dailStudyId) {
         return dailyStudyRepository.findById(dailStudyId)
                 .orElseThrow(() -> new DailyStudyException("dailyStudyId :: " + dailStudyId, E12000));
-    }
-
-    public List<ReviewData> findAllReviewDataByData(LocalDate targetDate) {
-
-        return null;
     }
 }

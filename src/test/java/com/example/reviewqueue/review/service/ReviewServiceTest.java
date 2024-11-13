@@ -90,7 +90,7 @@ class ReviewServiceTest {
 
         // when
         LocalDate targetDate = LocalDate.of(2024, 11, 2);
-        List<ReviewData> reviewDatas = reviewService.findAllReviewDataByData(targetDate);
+        List<ReviewData> reviewDatas = reviewService.findAllReviewDataByDate(targetDate);
 
         // then
         assertAll(

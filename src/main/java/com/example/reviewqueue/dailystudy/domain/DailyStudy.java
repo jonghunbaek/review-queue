@@ -8,6 +8,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
@@ -27,6 +28,10 @@ public class DailyStudy extends BaseEntity {
      *  학습 일시
      */
     private LocalDateTime studyDateTime;
+
+    // TODO :: 연관 관계 편의 메서드 추가 및 설정 수정 필요
+    @OneToMany(fetch = FetchType.EAGER, mappedBy = "dailyStudy")
+    private List<StudyKeyword> keywords;
 
     @ManyToOne
     private Study study;
