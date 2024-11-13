@@ -24,10 +24,12 @@ public class StudyService {
     private final StudyRepository studyRepository;
     private final MemberRepository memberRepository;
 
-    public void save(StudySave studySave, Long memberId) {
+    public long save(StudySave studySave, Long memberId) {
         Member member = findMemberById(memberId);
 
-        studyRepository.save(studySave.toEntity(member));
+        Study study = studyRepository.save(studySave.toEntity(member));
+
+        return study.getId();
     }
 
     public StudyInfo findStudyInfoBy(Long studyId) {
