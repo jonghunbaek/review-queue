@@ -8,6 +8,8 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.ActiveProfiles;
+import org.springframework.test.context.TestPropertySource;
+import org.springframework.test.context.jdbc.Sql;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
@@ -17,6 +19,8 @@ import static org.assertj.core.api.Assertions.tuple;
 import static org.junit.jupiter.api.Assertions.assertAll;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
+@TestPropertySource(properties = "spring.sql.init.mode=never")
+@Sql(scripts = {"/member.sql"}, executionPhase = Sql.ExecutionPhase.BEFORE_TEST_CLASS)
 @ActiveProfiles("test")
 @Transactional
 @SpringBootTest
@@ -30,10 +34,10 @@ class StudyServiceTest {
     void saveAndFindById() {
         // given
         StudySave studySave = new StudySave(StudyType.BOOK, "소프트웨어 장인", "개발자로서의 태도");
-        studyService.save(studySave, 1L);
+        long studyId = studyService.save(studySave, 1L);
 
         // when
-        StudyInfo studyInfo = studyService.findStudyInfoBy(1L);
+        StudyInfo studyInfo = studyService.findStudyInfoBy(studyId);
 
         // then
         assertAll(
