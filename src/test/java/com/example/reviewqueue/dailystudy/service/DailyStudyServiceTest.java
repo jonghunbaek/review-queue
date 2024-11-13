@@ -15,6 +15,7 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.ActiveProfiles;
+import org.springframework.test.context.jdbc.Sql;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
@@ -22,6 +23,7 @@ import java.util.List;
 import static org.junit.jupiter.api.Assertions.assertAll;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
+@Sql(scripts = {"/member.sql", "/study.sql"}, executionPhase = Sql.ExecutionPhase.BEFORE_TEST_CLASS)
 @ActiveProfiles("test")
 @Transactional
 @SpringBootTest
@@ -48,7 +50,7 @@ class DailyStudyServiceTest {
         // given
         Member member = memberRepository.findAll().get(0);
         Study study = studyRepository.findAll().get(0);
-        DailyStudySave dailyStudySave = new DailyStudySave(1L, "8.인덱스(p230 ~ p250");
+        DailyStudySave dailyStudySave = new DailyStudySave(study.getId(), "8.인덱스(p230 ~ p250");
         StudyKeywordSave keyword1 = new StudyKeywordSave("B-Tree 인덱스", "조회 성능을 높이기 위한 인덱스");
         StudyKeywordSave keyword2 = new StudyKeywordSave("R-Tree 인덱스", "공간 정보를 다루기 위한 인덱스");
 
