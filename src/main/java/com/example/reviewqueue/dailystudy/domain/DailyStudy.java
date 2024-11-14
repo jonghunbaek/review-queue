@@ -8,6 +8,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 
 @Getter
@@ -29,8 +30,7 @@ public class DailyStudy extends BaseEntity {
      */
     private LocalDateTime studyDateTime;
 
-    // TODO :: 연관 관계 편의 메서드 추가 및 설정 수정 필요
-    @OneToMany(fetch = FetchType.EAGER, mappedBy = "dailyStudy")
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "dailyStudy")
     private List<StudyKeyword> keywords;
 
     @ManyToOne
@@ -40,5 +40,6 @@ public class DailyStudy extends BaseEntity {
         this.studyRange = studyRange;
         this.studyDateTime = studyDateTime;
         this.study = study;
+        this.keywords = new ArrayList<>();
     }
 }

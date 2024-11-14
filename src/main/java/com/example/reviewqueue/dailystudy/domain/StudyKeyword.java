@@ -32,5 +32,6 @@ public class StudyKeyword extends BaseEntity {
         this.keyword = keyword;
         this.description = description;
         this.dailyStudy = dailyStudy;
+        dailyStudy.getKeywords().add(this);
     }
 }

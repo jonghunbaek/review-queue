@@ -1,7 +1,5 @@
 package com.example.reviewqueue.review.service.dto;
 
-import com.example.reviewqueue.dailystudy.domain.DailyStudy;
-import com.example.reviewqueue.dailystudy.domain.StudyKeyword;
 import com.example.reviewqueue.review.domain.Review;
 import lombok.Getter;
 
@@ -19,8 +17,7 @@ public class ReviewData {
     }
 
     public static ReviewData of(Review review) {
-        List<StudyKeyword> keywords = review.getDailyStudy().getKeywords();
-        List<ReviewKeyword> reviewKeywords = keywords.stream()
+        List<ReviewKeyword> reviewKeywords = review.getDailyStudy().getKeywords().stream()
                 .map(ReviewKeyword::of)
                 .toList();
 
