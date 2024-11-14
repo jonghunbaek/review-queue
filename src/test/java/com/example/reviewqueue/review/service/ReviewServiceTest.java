@@ -15,14 +15,16 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.ActiveProfiles;
+import org.springframework.test.context.jdbc.Sql;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDate;
 import java.util.List;
 
-import static org.assertj.core.api.Assertions.*;
-import static org.junit.jupiter.api.Assertions.*;
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.api.Assertions.assertAll;
 
+@Sql(scripts = {"/member.sql", "/study.sql"}, executionPhase = Sql.ExecutionPhase.BEFORE_TEST_CLASS)
 @ActiveProfiles("test")
 @Transactional
 @SpringBootTest
@@ -73,7 +75,7 @@ class ReviewServiceTest {
     void findReviewDataByDate() {
         Study study = studyRepository.findAll().get(0);
         LocalDate studyDate1 = LocalDate.of(2024, 10, 31);
-        LocalDate studyDate2 = LocalDate.of(2024, 11, 1);
+        LocalDate studyDate2 = LocalDate.of(2024, 10, 31);
         DailyStudy dailyStudy1 = dailyStudyRepository.save(new DailyStudy("8장 인덱스, p200-210", studyDate1.atTime(0,0), study));
         DailyStudy dailyStudy2 = dailyStudyRepository.save(new DailyStudy("8장 인덱스, p211-220", studyDate2.atTime(0,0), study));
 
@@ -89,8 +91,8 @@ class ReviewServiceTest {
         reviewService.save(reviewQueueSave2);
 
         // when
-        LocalDate targetDate = LocalDate.of(2024, 11, 2);
-        List<ReviewData> reviewDatas = reviewService.findAllReviewDataByDate(targetDate);
+        LocalDate reviewDate = LocalDate.of(2024, 11, 3);
+        List<ReviewData> reviewDatas = reviewService.findAllReviewDataByDate(reviewDate);
 
         // then
         assertAll(
@@ -98,14 +100,14 @@ class ReviewServiceTest {
                 () -> assertThat(reviewDatas.get(0).getReviewKeywords()).hasSize(2)
                         .extracting("keyword")
                         .containsExactlyInAnyOrder(
-                                tuple("B-Tree 인덱스"),
-                                tuple("R-Tree 인덱스")
+                                "B-Tree 인덱스",
+                                "R-Tree 인덱스"
                         ),
                 () -> assertThat(reviewDatas.get(1).getReviewKeywords()).hasSize(2)
                         .extracting("keyword")
                         .containsExactlyInAnyOrder(
-                                tuple("클러스터드 인덱스"),
-                                tuple("세컨더리 인덱스")
+                                "클러스터드 인덱스",
+                                "세컨더리 인덱스"
                         )
         );
     }
