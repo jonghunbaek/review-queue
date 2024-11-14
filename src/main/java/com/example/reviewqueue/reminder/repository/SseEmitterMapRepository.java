@@ -1,4 +1,4 @@
-package com.example.reviewqueue.review.repository;
+package com.example.reviewqueue.reminder.repository;
 
 import org.springframework.stereotype.Repository;
 import org.springframework.web.servlet.mvc.method.annotation.SseEmitter;
