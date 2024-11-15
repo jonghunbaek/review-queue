@@ -52,6 +52,16 @@ public class ReviewService {
         return reviews;
     }
 
+    public List<Long> findMemberIdsByReviewDate(LocalDate reviewDate) {
+        List<Review> reviews = reviewRepository.findAllByReviewDate(reviewDate);
+
+        return reviews.stream()
+                .map(review -> review.getMember().getId())
+                .distinct()
+                .toList();
+    }
+
+    // TODO :: 현재로선 불필요한 메서드 -> 추후 전체 조회가 아닌 사용자 아이디별로 조회할 수 있도록 변경(반환 타입은 그대로)
     public List<ReviewData> findAllReviewDataByDate(LocalDate reviewDate) {
         List<Review> reviews = reviewRepository.findAllByReviewDate(reviewDate);
 
