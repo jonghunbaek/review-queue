@@ -5,8 +5,10 @@ import org.springframework.web.servlet.mvc.method.annotation.SseEmitter;
 
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 import java.util.Optional;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.stream.Collectors;
 
 /**
  * 테스트용 emitter 저장소.
@@ -24,6 +26,16 @@ public class SseEmitterMapRepository implements SseEmitterRepository {
     @Override
     public List<SseEmitter> findAll() {
         return emitters.values().stream().toList();
+    }
+
+    @Override
+    public Map<Long, SseEmitter> findAllByMemberIds(List<Long> memberIds) {
+        return emitters.entrySet().stream()
+                .filter(entry -> memberIds.contains(entry.getKey()))
+                .collect(Collectors.toMap(
+                        Map.Entry::getKey,
+                        Map.Entry::getValue
+                ));
     }
 
     @Override
