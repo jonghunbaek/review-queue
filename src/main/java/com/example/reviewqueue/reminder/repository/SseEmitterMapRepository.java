@@ -19,23 +19,13 @@ public class SseEmitterMapRepository implements SseEmitterRepository {
     private Map<Long, SseEmitter> emitters = new ConcurrentHashMap<>();
 
     @Override
-    public Optional<SseEmitter> findByUserId(Long userId) {
+    public Optional<SseEmitter> findByMemberId(Long userId) {
         return Optional.ofNullable(emitters.get(userId));
     }
 
     @Override
     public List<SseEmitter> findAll() {
         return emitters.values().stream().toList();
-    }
-
-    @Override
-    public Map<Long, SseEmitter> findAllByMemberIds(List<Long> memberIds) {
-        return emitters.entrySet().stream()
-                .filter(entry -> memberIds.contains(entry.getKey()))
-                .collect(Collectors.toMap(
-                        Map.Entry::getKey,
-                        Map.Entry::getValue
-                ));
     }
 
     @Override
