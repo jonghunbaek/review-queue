@@ -1,5 +1,6 @@
 package com.example.reviewqueue.reminder.service;
 
+import com.example.reviewqueue.common.response.ResponseCode;
 import com.example.reviewqueue.member.domain.Member;
 import com.example.reviewqueue.member.repository.MemberRepository;
 import com.example.reviewqueue.reminder.domain.ReviewReminder;
@@ -27,6 +28,11 @@ public class ReviewReminderService {
     // TODO :: 나중에 JdbcTemplate을 활용해 벌크 INSERT로 변경하기
     @Scheduled(cron = "0 0 5 * * ?")
     public void addReminder() {
+        saveReviewReminder()
+            .forEach(memberId -> sseService.sendReminder(memberId, ResponseCode.E14001));
+    }
+
+    private List<Long> saveReviewReminder() {
         LocalDate today = LocalDate.now();
         List<Long> memberIds = reviewService.findMemberIdsByReviewDate(today);
         List<Member> members = memberRepository.findAllById(memberIds);
@@ -37,6 +43,6 @@ public class ReviewReminderService {
 
         reminderRepository.saveAll(reminders);
 
-        sseService.sendReminder(memberIds);
+        return memberIds;
     }
 }
