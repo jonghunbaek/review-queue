@@ -4,10 +4,12 @@ import com.example.reviewqueue.common.domain.BaseEntity;
 import com.example.reviewqueue.member.domain.Member;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 import java.time.LocalDate;
 
+@Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Entity
 public class ReviewReminder extends BaseEntity {
