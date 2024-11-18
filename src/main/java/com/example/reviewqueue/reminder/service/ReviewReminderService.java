@@ -45,4 +45,8 @@ public class ReviewReminderService {
 
         return memberIds;
     }
+
+    public boolean hasNotRead(Long memberId) {
+        return reminderRepository.existsReviewRemindersByMemberIdAndIsReadIsFalse(memberId);
+    }
 }
