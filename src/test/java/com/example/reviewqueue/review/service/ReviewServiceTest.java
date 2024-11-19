@@ -8,8 +8,8 @@ import com.example.reviewqueue.member.domain.Member;
 import com.example.reviewqueue.member.repository.MemberRepository;
 import com.example.reviewqueue.review.domain.Review;
 import com.example.reviewqueue.review.repository.ReviewRepository;
-import com.example.reviewqueue.review.service.dto.ReviewData;
 import com.example.reviewqueue.review.service.dto.ReviewQueueSave;
+import com.example.reviewqueue.review.service.dto.ReviewsData;
 import com.example.reviewqueue.study.domain.Study;
 import com.example.reviewqueue.study.domain.StudyType;
 import com.example.reviewqueue.study.repository.StudyRepository;
@@ -100,18 +100,18 @@ class ReviewServiceTest {
 
         // when
         LocalDate reviewDate = LocalDate.of(2024, 11, 3);
-        List<ReviewData> reviewDatas = reviewService.findAllReviewDataByDateAndMemberId(reviewDate, member.getId());
+        ReviewsData reviewsData = reviewService.findAllReviewDataByDateAndMemberId(reviewDate, member.getId());
 
         // then
         assertAll(
-                () -> assertThat(reviewDatas).hasSize(2),
-                () -> assertThat(reviewDatas.get(0).getReviewKeywords()).hasSize(2)
+                () -> assertThat(reviewsData.getReviews()).hasSize(2),
+                () -> assertThat(reviewsData.getReviews().get(0).getReviewKeywords()).hasSize(2)
                         .extracting("keyword")
                         .containsExactlyInAnyOrder(
                                 "B-Tree 인덱스",
                                 "R-Tree 인덱스"
                         ),
-                () -> assertThat(reviewDatas.get(1).getReviewKeywords()).hasSize(2)
+                () -> assertThat(reviewsData.getReviews().get(1).getReviewKeywords()).hasSize(2)
                         .extracting("keyword")
                         .containsExactlyInAnyOrder(
                                 "클러스터드 인덱스",

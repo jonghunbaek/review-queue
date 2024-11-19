@@ -8,6 +8,7 @@ import com.example.reviewqueue.review.domain.Review;
 import com.example.reviewqueue.review.repository.ReviewRepository;
 import com.example.reviewqueue.review.service.dto.ReviewData;
 import com.example.reviewqueue.review.service.dto.ReviewQueueSave;
+import com.example.reviewqueue.review.service.dto.ReviewsData;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -61,12 +62,13 @@ public class ReviewService {
                 .toList();
     }
 
-    public List<ReviewData> findAllReviewDataByDateAndMemberId(LocalDate reviewDate, Long memberId) {
+    public ReviewsData findAllReviewDataByDateAndMemberId(LocalDate reviewDate, Long memberId) {
         List<Review> reviews = reviewRepository.findAllByReviewDateAndMemberId(reviewDate, memberId);
-
-        return reviews.stream()
+        List<ReviewData> data = reviews.stream()
             .map(ReviewData::of)
             .toList();
+
+        return new ReviewsData(memberId, reviewDate, data);
     }
 
     private DailyStudy findDailyStudyBy(Long dailStudyId) {
