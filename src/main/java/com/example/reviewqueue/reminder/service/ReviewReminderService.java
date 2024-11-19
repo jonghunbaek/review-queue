@@ -6,6 +6,7 @@ import com.example.reviewqueue.member.repository.MemberRepository;
 import com.example.reviewqueue.reminder.domain.ReviewReminder;
 import com.example.reviewqueue.reminder.repository.ReviewReminderRepository;
 import com.example.reviewqueue.review.service.ReviewService;
+import com.example.reviewqueue.review.service.dto.ReviewsData;
 import lombok.RequiredArgsConstructor;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
@@ -46,7 +47,11 @@ public class ReviewReminderService {
         return memberIds;
     }
 
-    public boolean hasNotRead(Long memberId) {
-        return reminderRepository.existsReviewRemindersByMemberIdAndIsReadIsFalse(memberId);
+    public List<ReviewsData> findUnreadReminderReviewData(Long memberId) {
+        List<ReviewReminder> reminders = reminderRepository.findAllByMemberIdAndIsReadIsFalse(memberId);
+
+        return reminders.stream()
+            .map(reminder -> reviewService.findAllReviewDataByDateAndMemberId(reminder.getReminderDate(), reminder.getMember().getId()))
+            .toList();
     }
 }
