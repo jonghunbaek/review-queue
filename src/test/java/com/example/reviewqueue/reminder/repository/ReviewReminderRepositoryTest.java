@@ -26,7 +26,7 @@ class ReviewReminderRepositoryTest {
     @Autowired
     private ReviewReminderRepository reminderRepository;
 
-    @DisplayName("읽지 않은 알림이 존재하는지 확인한다.")
+    @DisplayName("읽지 않은 알림을 조회한다.")
     @Test
     void existsReviewRemindersByMemberIdAndReadIsFalse() {
         // given
@@ -38,9 +38,9 @@ class ReviewReminderRepositoryTest {
         reminderRepository.saveAll(List.of(reminder1, reminder2));
 
         // when
-        boolean hasNotRead = reminderRepository.existsReviewRemindersByMemberIdAndIsReadIsFalse(member.getId());
+        List<ReviewReminder> reminders = reminderRepository.findAllByMemberIdAndIsReadIsFalse(member.getId());
 
         // then
-        assertThat(hasNotRead).isTrue();
+        assertThat(reminders).hasSize(1);
     }
 }
