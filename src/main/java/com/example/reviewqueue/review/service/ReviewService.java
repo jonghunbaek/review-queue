@@ -61,13 +61,12 @@ public class ReviewService {
                 .toList();
     }
 
-    // TODO :: 현재로선 불필요한 메서드 -> 추후 전체 조회가 아닌 사용자 아이디별로 조회할 수 있도록 변경(반환 타입은 그대로)
-    public List<ReviewData> findAllReviewDataByDate(LocalDate reviewDate) {
-        List<Review> reviews = reviewRepository.findAllByReviewDate(reviewDate);
+    public List<ReviewData> findAllReviewDataByDateAndMemberId(LocalDate reviewDate, Long memberId) {
+        List<Review> reviews = reviewRepository.findAllByReviewDateAndMemberId(reviewDate, memberId);
 
         return reviews.stream()
-                .map(ReviewData::of)
-                .toList();
+            .map(ReviewData::of)
+            .toList();
     }
 
     private DailyStudy findDailyStudyBy(Long dailStudyId) {

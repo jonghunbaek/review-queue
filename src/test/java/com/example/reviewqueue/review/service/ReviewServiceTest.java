@@ -80,6 +80,7 @@ class ReviewServiceTest {
     @DisplayName("파라미터로 전달 받은 날짜에 해당하는 복습 데이터를 가져온다.")
     @Test
     void findReviewDataByDate() {
+        Member member = memberRepository.findAll().get(0);
         Study study = studyRepository.findAll().get(0);
         LocalDate studyDate1 = LocalDate.of(2024, 10, 31);
         LocalDate studyDate2 = LocalDate.of(2024, 10, 31);
@@ -99,7 +100,7 @@ class ReviewServiceTest {
 
         // when
         LocalDate reviewDate = LocalDate.of(2024, 11, 3);
-        List<ReviewData> reviewDatas = reviewService.findAllReviewDataByDate(reviewDate);
+        List<ReviewData> reviewDatas = reviewService.findAllReviewDataByDateAndMemberId(reviewDate, member.getId());
 
         // then
         assertAll(
