@@ -9,4 +9,5 @@ import java.util.List;
 public interface ReviewRepository extends JpaRepository<Review, Long> {
 
     List<Review> findAllByReviewDate(LocalDate reviewDate);
+    List<Review> findAllByReviewDateAndMemberId(LocalDate reviewDate, Long memberId);
 }
