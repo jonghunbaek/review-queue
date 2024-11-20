@@ -8,9 +8,11 @@ import java.util.List;
 @Getter
 public class ReviewData {
 
+    private final long dailyStudyId;
     private final List<ReviewKeyword> reviewKeywords;
 
-    public ReviewData(List<ReviewKeyword> reviewKeywords) {
+    public ReviewData(long dailyStudyId, List<ReviewKeyword> reviewKeywords) {
+        this.dailyStudyId = dailyStudyId;
         this.reviewKeywords = reviewKeywords;
     }
 
@@ -19,6 +21,6 @@ public class ReviewData {
                 .map(ReviewKeyword::of)
                 .toList();
 
-        return new ReviewData(reviewKeywords);
+        return new ReviewData(review.getDailyStudy().getId(), reviewKeywords);
     }
 }
