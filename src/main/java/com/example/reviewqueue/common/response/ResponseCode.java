@@ -22,6 +22,14 @@ import static org.springframework.http.HttpStatus.*;
 @Getter
 public enum ResponseCode {
 
+    E00000("OK", OK),
+    E00001("토큰이 존재하지 않거나 허가되지 않은 접근입니다.", UNAUTHORIZED),
+    E00002("해당 페이지에 접근 권한이 없습니다.", FORBIDDEN),
+    E00003("토큰이 만료됐습니다.", UNAUTHORIZED),
+    E00004("토큰이 위조됐습니다.", UNAUTHORIZED),
+    E00005("해당 토큰은 사용 불가한 토큰입니다.", UNAUTHORIZED),
+    E00006("토큰의 형식이 잘못됐습니다.", UNAUTHORIZED),
+
     E10000("조회할 수 있는 회원이 없습니다.", BAD_REQUEST),
 
     E11000("조회할 수 있는 학습이 없습니다.", BAD_REQUEST),
