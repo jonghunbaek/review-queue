@@ -1,15 +1,17 @@
 spring:
-  # profile ??
+  # 프로필 설정
   config:
     activate:
       on-profile: local
 
-  # datasource ??
+  # DB 설정
   datasource:
     driver-class-name: com.mysql.cj.jdbc.Driver
     url: jdbc:mysql://localhost:3306/review-queue
     username: review-queue
     password: Zxcv1234!
+
+  # JPA 설정
   jpa:
     hibernate:
       ddl-auto: update
@@ -20,12 +22,32 @@ spring:
           batch_size: 1000
     show-sql: false
 
+  # Redis 설정
   data:
     redis:
       host: localhost
       port: 6379
 
-# ??? sql? ??
+# 카카오 소셜 로그인 설정
+oauth2:
+  kakao:
+    api-key:
+      client-id: ${REST_API_ID}
+      client-secret: ${REST_API_SECRET}
+    uri:
+      redirect: http://localhost:8080/oauth/kakao/callback
+      authorization: https://kauth.kakao.com/oauth/authorize
+      token: https://kauth.kakao.com/oauth/token
+      user-info: https://kapi.kakao.com/v2/user/me
+
+jwt:
+  secret-key: NiOeyFbN1Gqo10bPgUyTFsRMkJpGLXSvGP04eFqj5B30r5TcrtlSXfQ7TndvYjNvfkEKLqILn0j1SmKODO6Yw3JpBBgI6nVPEbhqxeY1qbPSFGyzyEVxnl4bQcrnVneI
+  access-expiration: 86400
+  refresh-expiration: 86400 # 1일
+  issuer: jonghun
+
+
+# SQL 로그 설정
 logging:
   level:
     org.hibernate.SQL: debug

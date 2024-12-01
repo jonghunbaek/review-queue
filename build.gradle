@@ -24,7 +24,7 @@ repositories {
 }
 
 dependencies {
-    // spring-web
+    // Spring Web
     implementation 'org.springframework.boot:spring-boot-starter-web'
 
     // Persistence
@@ -35,6 +35,10 @@ dependencies {
 
     // Auth
     implementation 'org.springframework.boot:spring-boot-starter-security'
+
+    // JWT
+    implementation "io.jsonwebtoken:jjwt:0.12.3"
+    implementation 'javax.xml.bind:jaxb-api:2.4.0-b180830.0359'
 
     // Util
     implementation 'org.springframework.boot:spring-boot-starter-validation'
