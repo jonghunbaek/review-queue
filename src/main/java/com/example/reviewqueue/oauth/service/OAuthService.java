@@ -11,4 +11,12 @@ import org.springframework.transaction.annotation.Transactional;
 public class OAuthService {
 
     private final KakaoOAuthClient kakaoOAuthClient;
+
+    public void getAuthCode() {
+        kakaoOAuthClient.getAuthCode();
+    }
+
+    public void getAuthToken(String code) {
+        kakaoOAuthClient.getAuthToken();
+    }
 }
