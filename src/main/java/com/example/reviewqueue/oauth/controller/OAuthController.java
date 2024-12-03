@@ -2,6 +2,7 @@ package com.example.reviewqueue.oauth.controller;
 
 import com.example.reviewqueue.oauth.controller.dto.KakaoAuthCode;
 import com.example.reviewqueue.oauth.service.OAuthService;
+import com.example.reviewqueue.oauth.service.dto.KakaoUserInfo;
 import com.example.reviewqueue.oauth.service.dto.OAuthTokens;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -25,7 +26,7 @@ public class OAuthController {
     @GetMapping("/kakao/callback")
     public void kakaoCallback(KakaoAuthCode kakaoAuthCode) {
         OAuthTokens authToken = oAuthService.getAuthToken(kakaoAuthCode.getCode()); // 1. 토큰 발급
-        oAuthService.getKakaoUserInfo(authToken); // 2. 카카오 사용자 정보 조회
+        KakaoUserInfo kakaoUserInfo = oAuthService.getKakaoUserInfo(authToken);// 2. 카카오 사용자 정보 조회
         // 3. DB 계정 정보 존재 여부 확인
         // 4. 없다면 새로 가입, 있다면 바로 로그인하고 토큰 발급
     }

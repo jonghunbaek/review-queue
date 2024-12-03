@@ -1,7 +1,9 @@
 package com.example.reviewqueue.oauth.client;
 
+import com.example.reviewqueue.oauth.client.dto.KakaoAccountInfoResponse;
 import com.example.reviewqueue.oauth.client.dto.KakaoAuthTokenRequest;
 import com.example.reviewqueue.oauth.client.dto.KakaoAuthTokenResponse;
+import com.example.reviewqueue.oauth.service.dto.KakaoUserInfo;
 import com.example.reviewqueue.oauth.service.dto.OAuthTokens;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -67,7 +69,7 @@ public class KakaoOAuthClient {
                 .toTokens();
     }
 
-    public void getKakaoUserInfo(OAuthTokens authToken) {
+    public KakaoUserInfo getKakaoUserInfo(OAuthTokens authToken) {
         RestClient restClient = RestClient.builder()
                 .baseUrl(userInfoUri)
                 .defaultHeader(HttpHeaders.ACCEPT, "application/json")
@@ -75,9 +77,9 @@ public class KakaoOAuthClient {
                 .defaultHeader(HttpHeaders.AUTHORIZATION, "Bearer " + authToken.getAccessToken())
                 .build();
 
-        // TODO :: 카카오 사용자 정보를 받을 객체 추가
-        String body = restClient.get()
+        return restClient.get()
                 .retrieve()
-                .body(String.class);
+                .body(KakaoAccountInfoResponse.class)
+                .toKakaoUserInfo();
     }
 }
