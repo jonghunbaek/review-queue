@@ -1,5 +1,8 @@
 package com.example.reviewqueue.oauth.client;
 
+import com.example.reviewqueue.oauth.client.dto.KakaoAuthTokenRequest;
+import com.example.reviewqueue.oauth.client.dto.KakaoAuthTokenResponse;
+import com.example.reviewqueue.oauth.service.dto.OAuthTokens;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
@@ -34,6 +37,7 @@ public class KakaoOAuthClient {
         RestClient restClient = RestClient.builder()
                 .baseUrl(authorizationUri)
                 .defaultHeader(HttpHeaders.ACCEPT, "application/json")
+                .defaultHeader(HttpHeaders.CONTENT_TYPE, "application/x-www-form-urlencoded")
                 .build();
 
         String response = restClient.get()
@@ -47,7 +51,33 @@ public class KakaoOAuthClient {
 
     }
 
-    public void getAuthToken() {
+    public OAuthTokens getAuthToken(String code) {
+        RestClient restClient = RestClient.builder()
+                .baseUrl(tokenUri)
+                .defaultHeader(HttpHeaders.ACCEPT, "application/json")
+                .defaultHeader(HttpHeaders.CONTENT_TYPE, "application/x-www-form-urlencoded")
+                .build();
 
+        KakaoAuthTokenRequest kakaoAuthTokenRequest = new KakaoAuthTokenRequest(clientId, clientSecret, redirectUri, code);
+
+        return restClient.post()
+                .body(kakaoAuthTokenRequest)
+                .retrieve()
+                .body(KakaoAuthTokenResponse.class)
+                .toTokens();
+    }
+
+    public void getKakaoUserInfo(OAuthTokens authToken) {
+        RestClient restClient = RestClient.builder()
+                .baseUrl(userInfoUri)
+                .defaultHeader(HttpHeaders.ACCEPT, "application/json")
+                .defaultHeader(HttpHeaders.CONTENT_TYPE, "application/x-www-form-urlencoded")
+                .defaultHeader(HttpHeaders.AUTHORIZATION, "Bearer " + authToken.getAccessToken())
+                .build();
+
+        // TODO :: 카카오 사용자 정보를 받을 객체 추가
+        String body = restClient.get()
+                .retrieve()
+                .body(String.class);
     }
 }
