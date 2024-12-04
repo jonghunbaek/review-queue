@@ -17,9 +17,11 @@ public class MemberService {
 
     private final MemberRepository memberRepository;
 
-    public void registerIfAbsent(Long socialId, String email) {
-        memberRepository.findByEmail(email).orElseGet(() ->
+    public Long registerIfAbsent(Long socialId, String email) {
+        Member member = memberRepository.findByEmail(email).orElseGet(() ->
                 memberRepository.save(new Member(socialId, email, createRandomNickname())));
+
+        return member.getId();
     }
 
     private String createRandomNickname() {
