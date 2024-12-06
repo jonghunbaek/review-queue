@@ -3,7 +3,7 @@ package com.example.reviewqueue.dailystudy.service;
 import com.example.reviewqueue.dailystudy.domain.StudyKeyword;
 import com.example.reviewqueue.dailystudy.repository.DailyStudyRepository;
 import com.example.reviewqueue.dailystudy.repository.StudyKeywordRepository;
-import com.example.reviewqueue.dailystudy.service.dto.DailyStudyInfo;
+import com.example.reviewqueue.dailystudy.service.dto.DailyStudyGeneralInfo;
 import com.example.reviewqueue.dailystudy.service.dto.DailyStudySave;
 import com.example.reviewqueue.dailystudy.service.dto.StudyKeywordSave;
 import com.example.reviewqueue.member.domain.Member;
@@ -55,7 +55,7 @@ class DailyStudyServiceTest {
         StudyKeywordSave keyword2 = new StudyKeywordSave("R-Tree 인덱스", "공간 정보를 다루기 위한 인덱스");
 
         // when
-        DailyStudyInfo savingInfo = dailyStudyService.save(dailyStudySave, List.of(keyword1, keyword2));
+        DailyStudyGeneralInfo savingInfo = dailyStudyService.save(dailyStudySave, List.of(keyword1, keyword2));
         List<StudyKeyword> keywords = studyKeywordRepository.findAllByDailyStudyId(savingInfo.getDailyStudyId());
 
         // then

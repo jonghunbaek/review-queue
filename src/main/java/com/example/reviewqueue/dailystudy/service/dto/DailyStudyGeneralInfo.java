@@ -8,19 +8,19 @@ import java.time.LocalDateTime;
 
 @NoArgsConstructor
 @Getter
-public class DailyStudyInfo {
+public class DailyStudyGeneralInfo {
 
     private Long dailyStudyId;
     private String studyRange;
     private LocalDateTime studyDateTime;
 
-    private DailyStudyInfo(Long dailyStudyId, String studyRange, LocalDateTime studyDateTime) {
+    private DailyStudyGeneralInfo(Long dailyStudyId, String studyRange, LocalDateTime studyDateTime) {
         this.dailyStudyId = dailyStudyId;
         this.studyRange = studyRange;
         this.studyDateTime = studyDateTime;
     }
 
-    public static DailyStudyInfo of(DailyStudy dailyStudy) {
-        return new DailyStudyInfo(dailyStudy.getId(), dailyStudy.getStudyRange(), dailyStudy.getStudyDateTime());
+    public static DailyStudyGeneralInfo of(DailyStudy dailyStudy) {
+        return new DailyStudyGeneralInfo(dailyStudy.getId(), dailyStudy.getStudyRange(), dailyStudy.getStudyDateTime());
     }
 }
