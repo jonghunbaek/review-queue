@@ -14,7 +14,9 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
-import static com.example.reviewqueue.common.response.ResponseCode.*;
+import static com.example.reviewqueue.common.response.ResponseCode.E10000;
+import static com.example.reviewqueue.common.response.ResponseCode.E11000;
+import static com.example.reviewqueue.common.util.GlobalValidator.validateMemberId;
 
 @RequiredArgsConstructor
 @Transactional
@@ -32,8 +34,10 @@ public class StudyService {
         return study.getId();
     }
 
-    public StudyInfo findStudyInfoBy(Long studyId) {
+    public StudyInfo findStudyInfoBy(Long studyId, Long memberId) {
         Study study = findStudyById(studyId);
+
+        validateMemberId(memberId, study.getMember().getId());
 
         return StudyInfo.of(study);
     }

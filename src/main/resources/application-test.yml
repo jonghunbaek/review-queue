@@ -22,3 +22,20 @@ spring:
     redis:
       host: localhost
       port: 6379
+
+jwt:
+  secret-key: NiOeyFbN1Gqo10bPgUyTFsRMkJpGLXSvGP04eFqj5B30r5TcrtlSXfQ7TndvYjNvfkEKLqILn0j1SmKODO6Yw3JpBBgI6nVPEbhqxeY1qbPSFGyzyEVxnl4bQcrnVneI
+  access-expiration: 86400
+  refresh-expiration: 86400 # 1일
+  issuer: jonghun
+
+oauth2:
+  kakao:
+    api-key:
+      client-id: testId
+      client-secret: testSecret
+    uri:
+      redirect: http://localhost:8080/oauth/kakao/callback
+      authorization: https://kauth.kakao.com/oauth/authorize
+      token: https://kauth.kakao.com/oauth/token
+      user-info: https://kapi.kakao.com/v2/user/me

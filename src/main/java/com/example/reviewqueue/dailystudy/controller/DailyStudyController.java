@@ -29,9 +29,9 @@ public class DailyStudyController {
     /**
      *  일일 학습 단일 조회
      */
-    @GetMapping("{/dailyStudyId}")
+    @GetMapping("/{dailyStudyId}")
     public DailyStudyDetailInfo getDailyStudy(
-            @PathVariable Long dailyStudyId,
+            @PathVariable("dailyStudyId") Long dailyStudyId,
             @AuthenticatedMember Long memberId) {
 
         return dailyStudyService.findDailyStudyById(dailyStudyId, memberId);

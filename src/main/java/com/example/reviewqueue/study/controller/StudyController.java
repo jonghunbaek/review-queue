@@ -28,8 +28,11 @@ public class StudyController {
      *  학습 단일 조회
      */
     @GetMapping("/{studyId}")
-    public StudyInfo getStudyById(@PathVariable("studyId") Long studyId) {
-        return studyService.findStudyInfoBy(studyId);
+    public StudyInfo getStudyById(
+            @PathVariable("studyId") Long studyId,
+            @AuthenticatedMember Long memberId) {
+
+        return studyService.findStudyInfoBy(studyId, memberId);
     }
 
     /**

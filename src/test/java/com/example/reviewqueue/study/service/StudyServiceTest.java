@@ -35,7 +35,7 @@ class StudyServiceTest {
         long studyId = studyService.save(studySave, 1L);
 
         // when
-        StudyInfo studyInfo = studyService.findStudyInfoBy(studyId);
+        StudyInfo studyInfo = studyService.findStudyInfoBy(studyId, 1L);
 
         // then
         assertAll(
