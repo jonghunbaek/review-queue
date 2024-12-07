@@ -1,4 +1,4 @@
-package com.example.reviewqueue.review.controller;
+package com.example.reviewqueue.reminder.controller;
 
 import com.example.reviewqueue.reminder.service.SseService;
 import lombok.RequiredArgsConstructor;

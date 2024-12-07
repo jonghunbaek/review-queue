@@ -25,18 +25,16 @@ import java.time.LocalDate;
 import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.api.Assertions.assertAll;
 
 @Sql(scripts = {"/member.sql", "/study.sql"}, executionPhase = Sql.ExecutionPhase.BEFORE_TEST_CLASS)
 @ActiveProfiles("test")
 @Transactional
 @SpringBootTest
-class ReviewReminderServiceTest {
+class ReviewReminderSchedulerTest {
 
     @Autowired
-    private ReviewReminderService reviewReminderService;
-
-    @Autowired
-    private MemberRepository memberRepository;
+    private ReviewReminderScheduler reviewReminderScheduler;
 
     @Autowired
     private DailyStudyRepository dailyStudyRepository;
@@ -53,10 +51,9 @@ class ReviewReminderServiceTest {
     @Autowired
     private ReviewReminderRepository reviewReminderRepository;
 
-    @DisplayName("사용자 아이디에 해당하는 읽지 않은 알람을 모두 조회한다.")
+    @DisplayName("매일 아침 5시 복습할 내용이 존재하면 복습 알람을 저장한다.")
     @Test
-    void findUnreadReminderReviewData() {
-        Member member = memberRepository.findAll().get(0);
+    void addReminder() {
         Study study = studyRepository.findAll().get(0);
         LocalDate studyDate = LocalDate.of(2024, 10, 31);
         DailyStudy dailyStudy = dailyStudyRepository.save(new DailyStudy("8장 인덱스, p200-210", studyDate.atTime(0,0), study));
@@ -65,22 +62,17 @@ class ReviewReminderServiceTest {
         StudyKeyword keyword2 = new StudyKeyword("R-Tree 인덱스", "공간 정보를 다루기 위한 인덱스", dailyStudy);
         studyKeywordRepository.saveAll(List.of(keyword1, keyword2));
 
-        LocalDate reviewDate1 = LocalDate.of(2024, 11, 11);
-        LocalDate reviewDate2 = LocalDate.of(2024, 11, 15);
-        Review review1 = new Review(reviewDate1.minusDays(1L), reviewDate1, dailyStudy);
-        Review review2 = new Review(reviewDate2.minusDays(1L), reviewDate2, dailyStudy);
-        reviewRepository.saveAll(List.of(review1, review2));
-
-        ReviewReminder reviewReminder1 = new ReviewReminder(reviewDate1, member);
-        ReviewReminder reviewReminder2 = new ReviewReminder(reviewDate2, member);
-        reviewReminderRepository.saveAll(List.of(reviewReminder1, reviewReminder2));
+        LocalDate reviewDate = LocalDate.now();
+        Review review = new Review(reviewDate.minusDays(1L), reviewDate, dailyStudy);
+        reviewRepository.save(review);
 
         // when
-        List<ReviewsData> reviewsData = reviewReminderService.findUnreadReminderReviewData(member.getId());
+        reviewReminderScheduler.addReminder();
+        List<ReviewReminder> reminders = reviewReminderRepository.findAll();
 
         // then
-        assertThat(reviewsData).hasSize(2)
-                .extracting("reviewDate")
-                .containsExactlyInAnyOrder(reviewDate1, reviewDate2);
+        assertThat(reminders).hasSize(1)
+            .extracting("reminderDate")
+            .containsExactlyInAnyOrder(reviewDate);
     }
 }
