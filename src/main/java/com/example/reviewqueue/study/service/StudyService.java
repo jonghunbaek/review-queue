@@ -16,7 +16,7 @@ import java.util.List;
 
 import static com.example.reviewqueue.common.response.ResponseCode.E10000;
 import static com.example.reviewqueue.common.response.ResponseCode.E11000;
-import static com.example.reviewqueue.common.util.GlobalValidator.validateMemberId;
+import static com.example.reviewqueue.common.util.GlobalValidator.validateAccessPermission;
 
 @RequiredArgsConstructor
 @Transactional
@@ -37,7 +37,7 @@ public class StudyService {
     public StudyInfo findStudyInfoBy(Long studyId, Long memberId) {
         Study study = findStudyById(studyId);
 
-        validateMemberId(memberId, study.getMember().getId());
+        validateAccessPermission(memberId, study.getMember().getId());
 
         return StudyInfo.of(study);
     }

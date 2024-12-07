@@ -18,6 +18,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import static com.example.reviewqueue.common.response.ResponseCode.E12000;
+import static com.example.reviewqueue.common.util.GlobalValidator.validateAccessPermission;
 
 @RequiredArgsConstructor
 @Transactional
@@ -27,8 +28,11 @@ public class ReviewService {
     private final ReviewRepository reviewRepository;
     private final DailyStudyRepository dailyStudyRepository;
 
-    public void save(ReviewQueueSave reviewQueueSave) {
+    public void save(ReviewQueueSave reviewQueueSave, Long memberId) {
         DailyStudy dailyStudy = findDailyStudyBy(reviewQueueSave.getDailyStudyId());
+
+        validateAccessPermission(memberId, dailyStudy.getStudy().getMember().getId());
+
         ReviewCondition reviewCondition = reviewQueueSave.toReviewCondition(dailyStudy);
 
         LocalDate startDate = dailyStudy.getStudyDateTime().toLocalDate();

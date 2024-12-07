@@ -29,6 +29,7 @@ public enum ResponseCode {
     E00004("토큰이 위조됐습니다.", UNAUTHORIZED),
     E00005("해당 토큰은 사용 불가한 토큰입니다.", UNAUTHORIZED),
     E00006("토큰의 형식이 잘못됐습니다.", UNAUTHORIZED),
+    E00007("해당 리소스에 대한 접근 권한이 없습니다.", UNAUTHORIZED),
 
     E10000("조회할 수 있는 회원이 없습니다.", BAD_REQUEST),
 

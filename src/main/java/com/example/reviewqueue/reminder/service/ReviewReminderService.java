@@ -11,7 +11,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
-import static com.example.reviewqueue.common.util.GlobalValidator.validateMemberId;
+import static com.example.reviewqueue.common.util.GlobalValidator.validateAccessPermission;
 
 @Slf4j
 @RequiredArgsConstructor
@@ -26,7 +26,7 @@ public class ReviewReminderService {
     public List<ReviewsData> findUnreadReminderReviewData(Long memberId) {
         List<ReviewReminder> reminders = reminderRepository.findAllByMemberIdAndIsReadIsFalse(memberId);
 
-        validateMemberId(memberId, reminders.get(0).getMember().getId());
+        validateAccessPermission(memberId, reminders.get(0).getMember().getId());
 
         return reminders.stream()
                 .map(reminder -> reviewService.findAllReviewDataByDateAndMemberId(reminder.getReminderDate(), reminder.getMember().getId()))

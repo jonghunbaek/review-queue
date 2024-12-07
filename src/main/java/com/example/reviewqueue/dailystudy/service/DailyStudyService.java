@@ -1,6 +1,5 @@
 package com.example.reviewqueue.dailystudy.service;
 
-import com.example.reviewqueue.common.util.GlobalValidator;
 import com.example.reviewqueue.dailystudy.domain.DailyStudy;
 import com.example.reviewqueue.dailystudy.domain.StudyKeyword;
 import com.example.reviewqueue.dailystudy.exception.DailyStudyException;
@@ -50,7 +49,7 @@ public class DailyStudyService {
         DailyStudy dailyStudy = dailyStudyRepository.findById(dailyStudyId)
                 .orElseThrow(() -> new DailyStudyException("dailyStudyId :: " + dailyStudyId, E12000));
 
-        validateMemberId(memberId, dailyStudy.getStudy().getMember().getId());
+        validateAccessPermission(memberId, dailyStudy.getStudy().getMember().getId());
 
         List<StudyKeyword> studyKeywords = studyKeywordRepository.findAllByDailyStudyId(dailyStudyId);
         List<StudyKeywordInfo> studyKeywordsInfo = studyKeywords.stream()
@@ -63,7 +62,7 @@ public class DailyStudyService {
     public List<DailyStudyGeneralInfo> findAllByStudyId(Long studyId, Long memberId) {
         List<DailyStudy> dailyStudies = dailyStudyRepository.findAllByStudyId(studyId);
 
-        validateMemberId(memberId, dailyStudies.get(0).getStudy().getMember().getId());
+        validateAccessPermission(memberId, dailyStudies.get(0).getStudy().getMember().getId());
 
         return dailyStudies.stream()
                 .map(DailyStudyGeneralInfo::of)
