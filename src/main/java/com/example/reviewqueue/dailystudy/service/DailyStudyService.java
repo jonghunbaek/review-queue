@@ -1,5 +1,6 @@
 package com.example.reviewqueue.dailystudy.service;
 
+import com.example.reviewqueue.common.util.GlobalValidator;
 import com.example.reviewqueue.dailystudy.domain.DailyStudy;
 import com.example.reviewqueue.dailystudy.domain.StudyKeyword;
 import com.example.reviewqueue.dailystudy.exception.DailyStudyException;
@@ -17,6 +18,7 @@ import java.util.List;
 
 import static com.example.reviewqueue.common.response.ResponseCode.E11000;
 import static com.example.reviewqueue.common.response.ResponseCode.E12000;
+import static com.example.reviewqueue.common.util.GlobalValidator.*;
 
 @RequiredArgsConstructor
 @Transactional
@@ -44,9 +46,11 @@ public class DailyStudyService {
                 .orElseThrow(() -> new StudyException("studyId :: " + studyId, E11000));
     }
 
-    public DailyStudyDetailInfo findDailyStudyById(Long dailyStudyId) {
+    public DailyStudyDetailInfo findDailyStudyById(Long dailyStudyId, Long memberId) {
         DailyStudy dailyStudy = dailyStudyRepository.findById(dailyStudyId)
                 .orElseThrow(() -> new DailyStudyException("dailyStudyId :: " + dailyStudyId, E12000));
+
+        validateMemberId(memberId, dailyStudy.getStudy().getMember().getId());
 
         List<StudyKeyword> studyKeywords = studyKeywordRepository.findAllByDailyStudyId(dailyStudyId);
         List<StudyKeywordInfo> studyKeywordsInfo = studyKeywords.stream()
@@ -54,5 +58,15 @@ public class DailyStudyService {
                 .toList();
 
         return new DailyStudyDetailInfo(DailyStudyGeneralInfo.of(dailyStudy), studyKeywordsInfo);
+    }
+
+    public List<DailyStudyGeneralInfo> findAllByStudyId(Long studyId, Long memberId) {
+        List<DailyStudy> dailyStudies = dailyStudyRepository.findAllByStudyId(studyId);
+
+        validateMemberId(memberId, dailyStudies.get(0).getStudy().getMember().getId());
+
+        return dailyStudies.stream()
+                .map(DailyStudyGeneralInfo::of)
+                .toList();
     }
 }
