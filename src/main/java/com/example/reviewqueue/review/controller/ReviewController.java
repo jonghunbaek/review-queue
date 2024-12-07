@@ -16,8 +16,14 @@ public class ReviewController {
 
     private final ReviewService reviewService;
 
+    /**
+     *  일일 학습에 대한 새로운 복습 데이터를 저장
+     */
     @PostMapping
     public void postReviews(@RequestBody ReviewQueueSave reviewQueueSave, @AuthenticatedMember Long memberId) {
         reviewService.save(reviewQueueSave, memberId);
     }
+
+    // TODO :: 일일 학습 아이디와 날짜로 '복습' 데이터를 조회하는 API 작성 예정
+    //  데이터 반환시 해당 복습이 마지막 복습인지를 나타내는 필드 필요
 }
