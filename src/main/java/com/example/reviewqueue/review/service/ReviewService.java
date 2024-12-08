@@ -8,6 +8,7 @@ import com.example.reviewqueue.review.domain.ReviewCondition;
 import com.example.reviewqueue.review.exception.ReviewException;
 import com.example.reviewqueue.review.repository.ReviewRepository;
 import com.example.reviewqueue.review.service.dto.ReviewData;
+import com.example.reviewqueue.review.service.dto.ReviewGeneralInfo;
 import com.example.reviewqueue.review.service.dto.ReviewQueueSave;
 import com.example.reviewqueue.review.service.dto.ReviewsData;
 import lombok.RequiredArgsConstructor;
@@ -91,15 +92,15 @@ public class ReviewService {
         return reviews.size() == 1;
     }
 
-    public ReviewsData findAllBy(LocalDate reviewDate, Long memberId) {
+    public List<ReviewGeneralInfo> findAllReviewGeneralInfo(LocalDate reviewDate, Long memberId) {
         List<Review> reviews = reviewRepository.findAllByReviewDateAndMemberId(reviewDate, memberId);
 
-        validateAccessPermission(memberId, reviews.get(0).getMember().getId());
-
-        return createReviewData(reviews, reviewDate, memberId);
+        return reviews.stream()
+                .map(ReviewGeneralInfo::of)
+                .toList();
     }
 
-    public ReviewsData findAllBy(LocalDate reviewDate, Long dailyStudyId, Long memberId) {
+    public ReviewsData findAllReviewDataBy(LocalDate reviewDate, Long dailyStudyId, Long memberId) {
         List<Review> reviews = reviewRepository.findAllByReviewDateAndDailyStudyIdAndMemberId(reviewDate, dailyStudyId, memberId);
 
         validateAccessPermission(memberId, reviews.get(0).getMember().getId());

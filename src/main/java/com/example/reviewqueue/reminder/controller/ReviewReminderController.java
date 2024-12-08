@@ -2,7 +2,7 @@ package com.example.reviewqueue.reminder.controller;
 
 import com.example.reviewqueue.common.resolver.AuthenticatedMember;
 import com.example.reviewqueue.reminder.service.ReviewReminderService;
-import com.example.reviewqueue.review.service.dto.ReviewsData;
+import com.example.reviewqueue.reminder.service.dto.ReminderInfo;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 
@@ -19,7 +19,7 @@ public class ReviewReminderController {
      *  확인하지 않은 복습 알림을 모두 가져오기
      */
     @GetMapping
-    public List<ReviewsData> getUnreadReminders(@AuthenticatedMember Long memberId) {
+    public List<ReminderInfo> getUnreadReminders(@AuthenticatedMember Long memberId) {
         return reviewReminderService.findUnreadReminderReviewData(memberId);
     }
 

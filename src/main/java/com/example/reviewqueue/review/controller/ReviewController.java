@@ -42,6 +42,6 @@ public class ReviewController {
             @RequestParam(required = false) LocalDate reviewDate,
             @AuthenticatedMember Long memberId) {
 
-        return reviewService.findAllBy(reviewDate, dailyStudyId, memberId);
+        return reviewService.findAllReviewDataBy(reviewDate, dailyStudyId, memberId);
     }
 }

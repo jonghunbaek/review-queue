@@ -8,6 +8,7 @@ import com.example.reviewqueue.member.domain.Member;
 import com.example.reviewqueue.member.repository.MemberRepository;
 import com.example.reviewqueue.reminder.domain.ReviewReminder;
 import com.example.reviewqueue.reminder.repository.ReviewReminderRepository;
+import com.example.reviewqueue.reminder.service.dto.ReminderInfo;
 import com.example.reviewqueue.review.domain.Review;
 import com.example.reviewqueue.review.repository.ReviewRepository;
 import com.example.reviewqueue.review.service.dto.ReviewsData;
@@ -76,11 +77,11 @@ class ReviewReminderServiceTest {
         reviewReminderRepository.saveAll(List.of(reviewReminder1, reviewReminder2));
 
         // when
-        List<ReviewsData> reviewsData = reviewReminderService.findUnreadReminderReviewData(member.getId());
+        List<ReminderInfo> reminders = reviewReminderService.findUnreadReminderReviewData(member.getId());
 
         // then
-        assertThat(reviewsData).hasSize(2)
-                .extracting("reviewDate")
+        assertThat(reminders).hasSize(2)
+                .extracting("reminderDate")
                 .containsExactlyInAnyOrder(reviewDate1, reviewDate2);
     }
 }

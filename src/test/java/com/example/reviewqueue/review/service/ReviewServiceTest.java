@@ -8,8 +8,8 @@ import com.example.reviewqueue.member.domain.Member;
 import com.example.reviewqueue.member.repository.MemberRepository;
 import com.example.reviewqueue.review.domain.Review;
 import com.example.reviewqueue.review.repository.ReviewRepository;
+import com.example.reviewqueue.review.service.dto.ReviewGeneralInfo;
 import com.example.reviewqueue.review.service.dto.ReviewQueueSave;
-import com.example.reviewqueue.review.service.dto.ReviewsData;
 import com.example.reviewqueue.study.domain.Study;
 import com.example.reviewqueue.study.domain.StudyType;
 import com.example.reviewqueue.study.repository.StudyRepository;
@@ -26,7 +26,6 @@ import java.time.LocalDateTime;
 import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.junit.jupiter.api.Assertions.assertAll;
 
 @Sql(scripts = {"/member.sql", "/study.sql"}, executionPhase = Sql.ExecutionPhase.BEFORE_TEST_CLASS)
 @ActiveProfiles("test")
@@ -100,24 +99,10 @@ class ReviewServiceTest {
 
         // when
         LocalDate reviewDate = LocalDate.of(2024, 11, 3);
-        ReviewsData reviewsData = reviewService.findAllBy(reviewDate, member.getId());
+        List<ReviewGeneralInfo> reviewsGeneralInfo = reviewService.findAllReviewGeneralInfo(reviewDate, member.getId());
 
         // then
-        assertAll(
-                () -> assertThat(reviewsData.getReviews()).hasSize(2),
-                () -> assertThat(reviewsData.getReviews().get(0).getReviewKeywords()).hasSize(2)
-                        .extracting("keyword")
-                        .containsExactlyInAnyOrder(
-                                "B-Tree 인덱스",
-                                "R-Tree 인덱스"
-                        ),
-                () -> assertThat(reviewsData.getReviews().get(1).getReviewKeywords()).hasSize(2)
-                        .extracting("keyword")
-                        .containsExactlyInAnyOrder(
-                                "클러스터드 인덱스",
-                                "세컨더리 인덱스"
-                        )
-        );
+        assertThat(reviewsGeneralInfo).hasSize(2);
     }
 
     @DisplayName("파라미터로 전달 받은 복습 날짜에 복습 데이터를 가지고 있는 사용자의 아이디 목록을 반환한다.")

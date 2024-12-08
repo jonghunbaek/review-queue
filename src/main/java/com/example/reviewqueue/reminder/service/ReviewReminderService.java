@@ -1,11 +1,10 @@
 package com.example.reviewqueue.reminder.service;
 
-import com.example.reviewqueue.common.response.ResponseCode;
 import com.example.reviewqueue.reminder.domain.ReviewReminder;
 import com.example.reviewqueue.reminder.exception.ReviewReminderException;
 import com.example.reviewqueue.reminder.repository.ReviewReminderRepository;
+import com.example.reviewqueue.reminder.service.dto.ReminderInfo;
 import com.example.reviewqueue.review.service.ReviewService;
-import com.example.reviewqueue.review.service.dto.ReviewsData;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -13,7 +12,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
-import static com.example.reviewqueue.common.response.ResponseCode.*;
+import static com.example.reviewqueue.common.response.ResponseCode.E14003;
 import static com.example.reviewqueue.common.util.GlobalValidator.validateAccessPermission;
 
 @Slf4j
@@ -26,13 +25,13 @@ public class ReviewReminderService {
 
     private final ReviewReminderRepository reminderRepository;
 
-    public List<ReviewsData> findUnreadReminderReviewData(Long memberId) {
+    public List<ReminderInfo> findUnreadReminderReviewData(Long memberId) {
         List<ReviewReminder> reminders = reminderRepository.findAllByMemberIdAndIsReadIsFalse(memberId);
 
         validateAccessPermission(memberId, reminders.get(0).getMember().getId());
 
         return reminders.stream()
-                .map(reminder -> reviewService.findAllBy(reminder.getReminderDate(), reminder.getMember().getId()))
+                .map(reminder -> ReminderInfo.from(reminder, reviewService.findAllReviewGeneralInfo(reminder.getReminderDate(), reminder.getMember().getId())))
                 .toList();
     }
 
