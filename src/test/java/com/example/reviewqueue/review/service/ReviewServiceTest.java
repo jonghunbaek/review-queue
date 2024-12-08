@@ -62,7 +62,7 @@ class ReviewServiceTest {
         ReviewQueueSave reviewQueueSave = new ReviewQueueSave(dailyStudy.getId(), 5, 1, 2, 3, 4, 5);
 
         // when
-        reviewService.save(reviewQueueSave);
+        reviewService.save(reviewQueueSave, 1L);
         List<Review> reviews = reviewRepository.findAll();
 
         // then
@@ -95,12 +95,12 @@ class ReviewServiceTest {
 
         ReviewQueueSave reviewQueueSave1 = new ReviewQueueSave(dailyStudy1.getId(), 5, 1, 2, 3, 4, 5);
         ReviewQueueSave reviewQueueSave2 = new ReviewQueueSave(dailyStudy2.getId(), 5, 1, 2, 3, 4, 5);
-        reviewService.save(reviewQueueSave1);
-        reviewService.save(reviewQueueSave2);
+        reviewService.save(reviewQueueSave1, 1L);
+        reviewService.save(reviewQueueSave2, 1L);
 
         // when
         LocalDate reviewDate = LocalDate.of(2024, 11, 3);
-        ReviewsData reviewsData = reviewService.findAllReviewDataByDateAndMemberId(reviewDate, member.getId());
+        ReviewsData reviewsData = reviewService.findAllBy(reviewDate, member.getId());
 
         // then
         assertAll(
@@ -133,8 +133,8 @@ class ReviewServiceTest {
 
         ReviewQueueSave reviewQueueSave1 = new ReviewQueueSave(dailyStudy1.getId(), 5, 1, 2, 3, 4, 5);
         ReviewQueueSave reviewQueueSave2 = new ReviewQueueSave(dailyStudy2.getId(), 5, 1, 2, 3, 4, 5);
-        reviewService.save(reviewQueueSave1);
-        reviewService.save(reviewQueueSave2);
+        reviewService.save(reviewQueueSave1, member1.getId());
+        reviewService.save(reviewQueueSave2, member2.getId());
 
         // when
         List<Long> memberIds = reviewService.findMemberIdsByReviewDate(LocalDate.of(2024, 11, 18));

@@ -2,12 +2,13 @@ package com.example.reviewqueue.review.controller;
 
 import com.example.reviewqueue.common.resolver.AuthenticatedMember;
 import com.example.reviewqueue.review.service.ReviewService;
+import com.example.reviewqueue.review.service.dto.ReviewData;
 import com.example.reviewqueue.review.service.dto.ReviewQueueSave;
+import com.example.reviewqueue.review.service.dto.ReviewsData;
 import lombok.RequiredArgsConstructor;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
+
+import java.time.LocalDate;
 
 @RequestMapping("/api/v1/reviews")
 @RequiredArgsConstructor
@@ -24,6 +25,23 @@ public class ReviewController {
         reviewService.save(reviewQueueSave, memberId);
     }
 
-    // TODO :: 일일 학습 아이디와 날짜로 '복습' 데이터를 조회하는 API 작성 예정
-    //  데이터 반환시 해당 복습이 마지막 복습인지를 나타내는 필드 필요
+    /**
+     *  복습 단일 조회
+     */
+    @GetMapping("/{reviewId}")
+    public ReviewData getreviewData(@PathVariable Long reviewId, @AuthenticatedMember Long memberId) {
+        return reviewService.findById(reviewId, memberId);
+    }
+
+    /**
+     *  조건에 해당하는 복습 자료를 모두 조회
+     */
+    @GetMapping
+    public ReviewsData getReviewsData(
+            @RequestParam(required = false) Long dailyStudyId,
+            @RequestParam(required = false) LocalDate reviewDate,
+            @AuthenticatedMember Long memberId) {
+
+        return reviewService.findAllBy(reviewDate, dailyStudyId, memberId);
+    }
 }

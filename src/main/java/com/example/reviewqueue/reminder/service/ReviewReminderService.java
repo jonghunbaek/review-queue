@@ -29,7 +29,7 @@ public class ReviewReminderService {
         validateAccessPermission(memberId, reminders.get(0).getMember().getId());
 
         return reminders.stream()
-                .map(reminder -> reviewService.findAllReviewDataByDateAndMemberId(reminder.getReminderDate(), reminder.getMember().getId()))
+                .map(reminder -> reviewService.findAllBy(reminder.getReminderDate(), reminder.getMember().getId()))
                 .toList();
     }
 }

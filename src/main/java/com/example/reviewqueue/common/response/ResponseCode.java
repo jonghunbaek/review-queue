@@ -40,6 +40,7 @@ public enum ResponseCode {
     E13000("복습 횟수의 범위가 잘못 지정됐습니다.", BAD_REQUEST),
     E13001("복습 주기의 범위가 잘못 지정됐습니다.", BAD_REQUEST),
     E13002("복습 횟수와 복습 주기 개수가 일치하지 않습니다.", BAD_REQUEST),
+    E13003("조회할 수 있는 복습이 없습니다.", BAD_REQUEST),
 
     E14000("이벤트 발송 중 문제가 발생했습니다.", SERVICE_UNAVAILABLE),
     E14001("확인하지 않은 알림이 있습니다.", OK),

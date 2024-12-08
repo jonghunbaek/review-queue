@@ -46,4 +46,8 @@ public class Review extends BaseEntity {
         this.dailyStudy = dailyStudy;
         this.member = dailyStudy.getStudy().getMember();
     }
+
+    public void completeReview() {
+        this.isCompleted = true;
+    }
 }
