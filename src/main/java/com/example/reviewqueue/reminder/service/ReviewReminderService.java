@@ -1,6 +1,8 @@
 package com.example.reviewqueue.reminder.service;
 
+import com.example.reviewqueue.common.response.ResponseCode;
 import com.example.reviewqueue.reminder.domain.ReviewReminder;
+import com.example.reviewqueue.reminder.exception.ReviewReminderException;
 import com.example.reviewqueue.reminder.repository.ReviewReminderRepository;
 import com.example.reviewqueue.review.service.ReviewService;
 import com.example.reviewqueue.review.service.dto.ReviewsData;
@@ -11,6 +13,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
+import static com.example.reviewqueue.common.response.ResponseCode.*;
 import static com.example.reviewqueue.common.util.GlobalValidator.validateAccessPermission;
 
 @Slf4j
@@ -31,5 +34,14 @@ public class ReviewReminderService {
         return reminders.stream()
                 .map(reminder -> reviewService.findAllBy(reminder.getReminderDate(), reminder.getMember().getId()))
                 .toList();
+    }
+
+    public void read(Long reminderId, Long memberId) {
+        ReviewReminder reviewReminder = reminderRepository.findById(reminderId)
+                .orElseThrow(() -> new ReviewReminderException("reminderId :: " + reminderId, E14003));
+
+        validateAccessPermission(memberId, reviewReminder.getMember().getId());
+
+        reviewReminder.read();
     }
 }

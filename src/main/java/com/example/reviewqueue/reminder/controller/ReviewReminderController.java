@@ -4,9 +4,7 @@ import com.example.reviewqueue.common.resolver.AuthenticatedMember;
 import com.example.reviewqueue.reminder.service.ReviewReminderService;
 import com.example.reviewqueue.review.service.dto.ReviewsData;
 import lombok.RequiredArgsConstructor;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
@@ -23,5 +21,13 @@ public class ReviewReminderController {
     @GetMapping
     public List<ReviewsData> getUnreadReminders(@AuthenticatedMember Long memberId) {
         return reviewReminderService.findUnreadReminderReviewData(memberId);
+    }
+
+    /**
+     *  알림 확인 처리
+     */
+    @PostMapping("/{reminderId}")
+    public void readReviewReminder(@PathVariable Long reminderId, @AuthenticatedMember Long memberId) {
+        reviewReminderService.read(reminderId, memberId);
     }
 }

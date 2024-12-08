@@ -44,7 +44,8 @@ public enum ResponseCode {
 
     E14000("이벤트 발송 중 문제가 발생했습니다.", SERVICE_UNAVAILABLE),
     E14001("확인하지 않은 알림이 있습니다.", OK),
-    E14002("SSE 연결이 생성되었습니다.", OK)
+    E14002("SSE 연결이 생성되었습니다.", OK),
+    E14003("조회할 수 있는 알림이 없습니다", BAD_REQUEST)
     ;
 
     private String message;
