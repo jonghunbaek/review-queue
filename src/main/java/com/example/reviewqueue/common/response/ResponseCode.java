@@ -47,6 +47,7 @@ public enum ResponseCode {
     E14002("SSE 연결이 생성되었습니다.", OK),
     E14003("조회할 수 있는 알림이 없습니다", BAD_REQUEST),
 
+    E90000("json 파싱 중 문제가 발생했습니다.", INTERNAL_SERVER_ERROR),
     E99999("예상하지 못한 예외가 발생했습니다.", INTERNAL_SERVER_ERROR)
     ;
 
