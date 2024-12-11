@@ -10,7 +10,7 @@ import java.util.Optional;
 public interface ReviewRepository extends JpaRepository<Review, Long> {
 
     Optional<Review> findByIdAndIsCompletedIsFalse(Long reviewId);
-    List<Review> findAllByDailyStudyId(Long dailyStudyId);
+    List<Review> findAllByIsCompletedIsFalseAndDailyStudyId(Long dailyStudyId);
     List<Review> findAllByReviewDate(LocalDate reviewDate);
     List<Review> findAllByReviewDateAndMemberId(LocalDate reviewDate, Long memberId);
     List<Review> findAllByReviewDateAndDailyStudyIdAndMemberId(LocalDate reviewDate, Long dailyStudyId, Long memberId);

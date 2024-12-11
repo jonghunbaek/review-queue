@@ -87,7 +87,7 @@ public class ReviewService {
 
     private boolean isLastReview(Review review) {
         DailyStudy dailyStudy = review.getDailyStudy();
-        List<Review> reviews = reviewRepository.findAllByDailyStudyId(dailyStudy.getId());
+        List<Review> reviews = reviewRepository.findAllByIsCompletedIsFalseAndDailyStudyId(dailyStudy.getId());
 
         return reviews.size() == 1;
     }

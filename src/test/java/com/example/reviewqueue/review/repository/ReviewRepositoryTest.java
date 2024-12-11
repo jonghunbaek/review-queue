@@ -1,14 +1,14 @@
 package com.example.reviewqueue.review.repository;
 
 import com.example.reviewqueue.dailystudy.domain.DailyStudy;
-import com.example.reviewqueue.studykeyword.domain.StudyKeyword;
 import com.example.reviewqueue.dailystudy.repository.DailyStudyRepository;
-import com.example.reviewqueue.studykeyword.repository.StudyKeywordRepository;
 import com.example.reviewqueue.member.domain.Member;
 import com.example.reviewqueue.member.repository.MemberRepository;
 import com.example.reviewqueue.review.domain.Review;
 import com.example.reviewqueue.study.domain.Study;
 import com.example.reviewqueue.study.repository.StudyRepository;
+import com.example.reviewqueue.studykeyword.domain.StudyKeyword;
+import com.example.reviewqueue.studykeyword.repository.StudyKeywordRepository;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -92,5 +92,31 @@ class ReviewRepositoryTest {
 
         // then
         assertThat(reviews).hasSize(2);
+    }
+
+    @DisplayName("일일 학습 아이디로 완료하지 않은 모든 복습을 조회한다.")
+    @Test
+    void findAllByIsCompletedIsFalseAndDailyStudyId() {
+        Member member = memberRepository.findAll().get(0);
+        Study study = studyRepository.findAll().get(0);
+        LocalDate studyDate1 = LocalDate.of(2024, 10, 31);
+        DailyStudy dailyStudy = dailyStudyRepository.save(new DailyStudy("8장 인덱스, p200-210", studyDate1.atTime(0,0), study));
+
+        Review review1 = new Review(LocalDate.of(2024, 11, 1), LocalDate.of(2024, 11, 2), dailyStudy);
+        Review review2 = new Review(LocalDate.of(2024, 11, 2), LocalDate.of(2024, 11, 3), dailyStudy);
+        Review review3 = new Review(LocalDate.of(2024, 11, 3), LocalDate.of(2024, 11, 4), dailyStudy);
+        review1.completeReview();
+        review2.completeReview();
+        reviewRepository.saveAll(List.of(review1, review2, review3));
+
+        // when
+        List<Review> reviews = reviewRepository.findAllByIsCompletedIsFalseAndDailyStudyId(dailyStudy.getId());
+
+        // then
+        assertThat(reviews).hasSize(1)
+                .extracting("reviewDate")
+                .containsExactlyInAnyOrder(
+                        review3.getReviewDate()
+                );
     }
 }
