@@ -3,6 +3,8 @@ package com.example.reviewqueue.studykeyword.controller;
 import com.example.reviewqueue.common.resolver.AuthenticatedMember;
 import com.example.reviewqueue.dailystudy.service.dto.StudyKeywordSave;
 import com.example.reviewqueue.studykeyword.service.StudyKeywordService;
+import com.example.reviewqueue.studykeyword.service.dto.StudyKeywordUpdate;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 
@@ -21,7 +23,7 @@ public class StudyKeywordController {
     }
 
     @PatchMapping("/{studyKeywordId}")
-    public void patchStudyKeyword(@PathVariable String studyKeywordId, @AuthenticatedMember Long memberId) {
-
+    public void patchStudyKeyword(@RequestBody @Valid StudyKeywordUpdate studyKeywordUpdate, @PathVariable Long studyKeywordId, @AuthenticatedMember Long memberId) {
+        studyKeywordService.updateKeyword(studyKeywordUpdate, studyKeywordId, memberId);
     }
 }

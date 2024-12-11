@@ -13,6 +13,7 @@ import static org.springframework.http.HttpStatus.*;
     E12 ~ : DailyStudy
     E13 ~ : Review
     E14 ~ : ReviewReminder
+    E15 ~ : StudyKeyword
  E2 ~ : Repository
  E3 ~ : Service
  E4 ~ : Controller
@@ -46,6 +47,9 @@ public enum ResponseCode {
     E14001("확인하지 않은 알림이 있습니다.", OK),
     E14002("SSE 연결이 생성되었습니다.", OK),
     E14003("조회할 수 있는 알림이 없습니다", BAD_REQUEST),
+
+    E15000("조회할 수 있는 학습 키워드가 없습니다.", BAD_REQUEST),
+    E15001("키워드는 빈 값이 허용되지 않습니다.", BAD_REQUEST),
 
     E90000("json 파싱 중 문제가 발생했습니다.", INTERNAL_SERVER_ERROR),
     E99999("예상하지 못한 예외가 발생했습니다.", INTERNAL_SERVER_ERROR)

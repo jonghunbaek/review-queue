@@ -1,11 +1,15 @@
 package com.example.reviewqueue.studykeyword.domain;
 
 import com.example.reviewqueue.common.domain.BaseEntity;
+import com.example.reviewqueue.common.response.ResponseCode;
 import com.example.reviewqueue.dailystudy.domain.DailyStudy;
+import com.example.reviewqueue.studykeyword.exception.StudyKeywordException;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+
+import static com.example.reviewqueue.common.response.ResponseCode.*;
 
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
@@ -34,5 +38,18 @@ public class StudyKeyword extends BaseEntity {
         this.description = description;
         this.dailyStudy = dailyStudy;
         dailyStudy.getKeywords().add(this);
+    }
+
+    public void updateKeywords(String keyword, String description) {
+        validateKeyword(keyword);
+
+        this.keyword = keyword;
+        this.description = description;
+    }
+
+    private void validateKeyword(String keyword) {
+        if (keyword.isBlank()) {
+            throw new StudyKeywordException(E15001);
+        }
     }
 }
