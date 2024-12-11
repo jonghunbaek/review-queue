@@ -28,14 +28,9 @@ public class DailyStudyService {
     private final DailyStudyRepository dailyStudyRepository;
     private final StudyKeywordRepository studyKeywordRepository;
 
-    public DailyStudyGeneralInfo save(DailyStudySave dailyStudySave, List<StudyKeywordSave> studyKeywordsSave) {
+    public DailyStudyGeneralInfo save(DailyStudySave dailyStudySave) {
         Study study = findStudyById(dailyStudySave.getStudyId());
         DailyStudy dailyStudy = dailyStudyRepository.save(dailyStudySave.toEntity(study));
-
-        List<StudyKeyword> studyKeywords = studyKeywordsSave.stream()
-                .map(dto -> dto.toEntity(dailyStudy))
-                .toList();
-        studyKeywordRepository.saveAll(studyKeywords);
 
         return DailyStudyGeneralInfo.of(dailyStudy);
     }

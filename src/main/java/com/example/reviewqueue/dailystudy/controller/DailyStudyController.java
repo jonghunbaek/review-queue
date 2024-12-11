@@ -5,7 +5,6 @@ import com.example.reviewqueue.dailystudy.service.DailyStudyService;
 import com.example.reviewqueue.dailystudy.service.dto.DailyStudyDetailInfo;
 import com.example.reviewqueue.dailystudy.service.dto.DailyStudyGeneralInfo;
 import com.example.reviewqueue.dailystudy.service.dto.DailyStudySave;
-import com.example.reviewqueue.dailystudy.service.dto.StudyKeywordSave;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 
@@ -18,13 +17,12 @@ public class DailyStudyController {
 
     private final DailyStudyService dailyStudyService;
 
-    // TODO :: 일일 학습 저장과 학습 키워드 저장 API 분리하기.
     /**
      *  일일 학습 등록
      */
     @PostMapping
-    public DailyStudyGeneralInfo postDailyStudy(@RequestBody DailyStudySave dailyStudySave, @RequestBody List<StudyKeywordSave> studyKeywordsSave) {
-        return dailyStudyService.save(dailyStudySave, studyKeywordsSave);
+    public DailyStudyGeneralInfo postDailyStudy(@RequestBody DailyStudySave dailyStudySave) {
+        return dailyStudyService.save(dailyStudySave);
     }
 
     /**
