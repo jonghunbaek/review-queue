@@ -26,7 +26,7 @@ public class ReviewController {
     }
 
     /**
-     *  복습 단일 조회
+     *  복습 단일 조회, 완료처리
      */
     @GetMapping("/{reviewId}")
     public ReviewData getreviewData(@PathVariable Long reviewId, @AuthenticatedMember Long memberId) {

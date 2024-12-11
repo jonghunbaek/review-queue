@@ -26,7 +26,7 @@ public class ReviewReminderController {
     /**
      *  알림 확인 처리
      */
-    @PostMapping("/{reminderId}")
+    @PostMapping("/check/{reminderId}")
     public void readReviewReminder(@PathVariable Long reminderId, @AuthenticatedMember Long memberId) {
         reviewReminderService.read(reminderId, memberId);
     }
