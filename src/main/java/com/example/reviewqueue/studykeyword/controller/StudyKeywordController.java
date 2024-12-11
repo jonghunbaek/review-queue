@@ -1,4 +1,4 @@
-package com.example.reviewqueue.dailystudy.controller;
+package com.example.reviewqueue.studykeyword.controller;
 
 import com.example.reviewqueue.common.resolver.AuthenticatedMember;
 import lombok.RequiredArgsConstructor;

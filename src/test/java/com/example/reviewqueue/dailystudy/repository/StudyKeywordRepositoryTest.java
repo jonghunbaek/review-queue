@@ -1,12 +1,13 @@
 package com.example.reviewqueue.dailystudy.repository;
 
 import com.example.reviewqueue.dailystudy.domain.DailyStudy;
-import com.example.reviewqueue.dailystudy.domain.StudyKeyword;
+import com.example.reviewqueue.studykeyword.domain.StudyKeyword;
 import com.example.reviewqueue.member.domain.Member;
 import com.example.reviewqueue.member.repository.MemberRepository;
 import com.example.reviewqueue.study.domain.Study;
 import com.example.reviewqueue.study.domain.StudyType;
 import com.example.reviewqueue.study.repository.StudyRepository;
+import com.example.reviewqueue.studykeyword.repository.StudyKeywordRepository;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;

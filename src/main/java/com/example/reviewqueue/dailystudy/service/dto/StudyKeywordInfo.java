@@ -1,6 +1,6 @@
 package com.example.reviewqueue.dailystudy.service.dto;
 
-import com.example.reviewqueue.dailystudy.domain.StudyKeyword;
+import com.example.reviewqueue.studykeyword.domain.StudyKeyword;
 import lombok.Getter;
 
 @Getter

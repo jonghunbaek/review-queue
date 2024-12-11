@@ -1,9 +1,9 @@
 package com.example.reviewqueue.review.repository;
 
 import com.example.reviewqueue.dailystudy.domain.DailyStudy;
-import com.example.reviewqueue.dailystudy.domain.StudyKeyword;
+import com.example.reviewqueue.studykeyword.domain.StudyKeyword;
 import com.example.reviewqueue.dailystudy.repository.DailyStudyRepository;
-import com.example.reviewqueue.dailystudy.repository.StudyKeywordRepository;
+import com.example.reviewqueue.studykeyword.repository.StudyKeywordRepository;
 import com.example.reviewqueue.member.domain.Member;
 import com.example.reviewqueue.member.repository.MemberRepository;
 import com.example.reviewqueue.review.domain.Review;

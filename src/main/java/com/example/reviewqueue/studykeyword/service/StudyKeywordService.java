@@ -1,7 +1,7 @@
-package com.example.reviewqueue.dailystudy.service;
+package com.example.reviewqueue.studykeyword.service;
 
 import com.example.reviewqueue.dailystudy.repository.DailyStudyRepository;
-import com.example.reviewqueue.dailystudy.repository.StudyKeywordRepository;
+import com.example.reviewqueue.studykeyword.repository.StudyKeywordRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;

@@ -1,10 +1,10 @@
 package com.example.reviewqueue.dailystudy.service;
 
 import com.example.reviewqueue.dailystudy.domain.DailyStudy;
-import com.example.reviewqueue.dailystudy.domain.StudyKeyword;
+import com.example.reviewqueue.studykeyword.domain.StudyKeyword;
 import com.example.reviewqueue.dailystudy.exception.DailyStudyException;
 import com.example.reviewqueue.dailystudy.repository.DailyStudyRepository;
-import com.example.reviewqueue.dailystudy.repository.StudyKeywordRepository;
+import com.example.reviewqueue.studykeyword.repository.StudyKeywordRepository;
 import com.example.reviewqueue.dailystudy.service.dto.*;
 import com.example.reviewqueue.study.domain.Study;
 import com.example.reviewqueue.study.exception.StudyException;

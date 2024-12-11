@@ -1,8 +1,8 @@
 package com.example.reviewqueue.dailystudy.service;
 
-import com.example.reviewqueue.dailystudy.domain.StudyKeyword;
+import com.example.reviewqueue.studykeyword.domain.StudyKeyword;
 import com.example.reviewqueue.dailystudy.repository.DailyStudyRepository;
-import com.example.reviewqueue.dailystudy.repository.StudyKeywordRepository;
+import com.example.reviewqueue.studykeyword.repository.StudyKeywordRepository;
 import com.example.reviewqueue.dailystudy.service.dto.DailyStudyGeneralInfo;
 import com.example.reviewqueue.dailystudy.service.dto.DailyStudySave;
 import com.example.reviewqueue.dailystudy.service.dto.StudyKeywordSave;

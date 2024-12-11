@@ -1,6 +1,6 @@
-package com.example.reviewqueue.dailystudy.repository;
+package com.example.reviewqueue.studykeyword.repository;
 
-import com.example.reviewqueue.dailystudy.domain.StudyKeyword;
+import com.example.reviewqueue.studykeyword.domain.StudyKeyword;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.List;

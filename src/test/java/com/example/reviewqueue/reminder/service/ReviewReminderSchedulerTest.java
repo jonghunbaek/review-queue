@@ -1,16 +1,13 @@
 package com.example.reviewqueue.reminder.service;
 
 import com.example.reviewqueue.dailystudy.domain.DailyStudy;
-import com.example.reviewqueue.dailystudy.domain.StudyKeyword;
+import com.example.reviewqueue.studykeyword.domain.StudyKeyword;
 import com.example.reviewqueue.dailystudy.repository.DailyStudyRepository;
-import com.example.reviewqueue.dailystudy.repository.StudyKeywordRepository;
-import com.example.reviewqueue.member.domain.Member;
-import com.example.reviewqueue.member.repository.MemberRepository;
+import com.example.reviewqueue.studykeyword.repository.StudyKeywordRepository;
 import com.example.reviewqueue.reminder.domain.ReviewReminder;
 import com.example.reviewqueue.reminder.repository.ReviewReminderRepository;
 import com.example.reviewqueue.review.domain.Review;
 import com.example.reviewqueue.review.repository.ReviewRepository;
-import com.example.reviewqueue.review.service.dto.ReviewsData;
 import com.example.reviewqueue.study.domain.Study;
 import com.example.reviewqueue.study.repository.StudyRepository;
 import org.junit.jupiter.api.DisplayName;

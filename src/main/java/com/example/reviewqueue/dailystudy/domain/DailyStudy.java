@@ -2,6 +2,7 @@ package com.example.reviewqueue.dailystudy.domain;
 
 import com.example.reviewqueue.common.domain.BaseEntity;
 import com.example.reviewqueue.study.domain.Study;
+import com.example.reviewqueue.studykeyword.domain.StudyKeyword;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.Getter;
