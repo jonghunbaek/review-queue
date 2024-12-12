@@ -36,6 +36,7 @@ public class DailyStudyController {
         return dailyStudyService.findDailyStudyById(dailyStudyId, memberId);
     }
 
+    // TODO :: 정렬 순서(학습 날짜), 기간별 조회 기능 보완 필요
     /**
      *  일일 학습 전체 조회 - 학습 아이디 기반
      */

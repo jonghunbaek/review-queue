@@ -35,6 +35,7 @@ public class StudyController {
         return studyService.findStudyInfoBy(studyId, memberId);
     }
 
+    // TODO :: 정렬 순서, 학습 분류(studyType)별 조회 기능 보완 필요
     /**
      *  학습 전체 조회
      */
