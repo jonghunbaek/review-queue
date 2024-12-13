@@ -4,6 +4,7 @@ import com.example.reviewqueue.member.domain.Member;
 import com.example.reviewqueue.member.exception.MemberException;
 import com.example.reviewqueue.member.repository.MemberRepository;
 import com.example.reviewqueue.study.domain.Study;
+import com.example.reviewqueue.study.domain.StudyType;
 import com.example.reviewqueue.study.exception.StudyException;
 import com.example.reviewqueue.study.repository.StudyRepository;
 import com.example.reviewqueue.study.service.dto.StudyInfo;
@@ -42,9 +43,19 @@ public class StudyService {
         return StudyInfo.of(study);
     }
 
+
+
+    public List<StudyInfo> findAllStudyInfosBy(StudyType studyType, Long memberId) {
+        List<Study> studies = studyRepository.findAllByStudyTypeAndMemberId(studyType, memberId);
+        return toStudiesInfo(studies);
+    }
+
     public List<StudyInfo> findAllStudyInfosBy(Long memberId) {
         List<Study> studies = studyRepository.findAllByMemberId(memberId);
+        return toStudiesInfo(studies);
+    }
 
+    private List<StudyInfo> toStudiesInfo(List<Study> studies) {
         return studies.stream()
                 .map(StudyInfo::of)
                 .toList();

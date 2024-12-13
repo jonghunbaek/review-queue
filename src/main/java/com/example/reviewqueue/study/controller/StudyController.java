@@ -2,6 +2,7 @@ package com.example.reviewqueue.study.controller;
 
 import com.example.reviewqueue.common.resolver.AuthenticatedMember;
 import com.example.reviewqueue.study.controller.dto.StudySaveInfo;
+import com.example.reviewqueue.study.domain.StudyType;
 import com.example.reviewqueue.study.service.StudyService;
 import com.example.reviewqueue.study.service.dto.StudyInfo;
 import lombok.RequiredArgsConstructor;
@@ -35,12 +36,15 @@ public class StudyController {
         return studyService.findStudyInfoBy(studyId, memberId);
     }
 
-    // TODO :: 정렬 순서, 학습 분류(studyType)별 조회 기능 보완 필요
     /**
      *  학습 전체 조회
      */
     @GetMapping
-    public List<StudyInfo> getAllStudiesById(@AuthenticatedMember Long memberId) {
+    public List<StudyInfo> getAllStudiesById(@RequestParam(required = false) String studyType, @AuthenticatedMember Long memberId) {
+        if (studyType != null && !studyType.isBlank()) {
+            return studyService.findAllStudyInfosBy(StudyType.valueOf(studyType), memberId);
+        }
+
         return studyService.findAllStudyInfosBy(memberId);
     }
     
