@@ -3,6 +3,8 @@ package com.example.reviewqueue.study.domain;
 import com.example.reviewqueue.common.domain.BaseEntity;
 import com.example.reviewqueue.member.domain.Member;
 import jakarta.persistence.*;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -39,5 +41,11 @@ public class Study extends BaseEntity {
         this.title = title;
         this.description = description;
         this.member = member;
+    }
+
+    public void update(StudyType studyType, String title, String description) {
+        this.studyType = studyType;
+        this.title = title;
+        this.description = description;
     }
 }

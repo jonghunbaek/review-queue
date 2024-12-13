@@ -9,6 +9,8 @@ import com.example.reviewqueue.study.exception.StudyException;
 import com.example.reviewqueue.study.repository.StudyRepository;
 import com.example.reviewqueue.study.service.dto.StudyInfo;
 import com.example.reviewqueue.study.service.dto.StudySave;
+import com.example.reviewqueue.study.service.dto.StudyUpdate;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -35,6 +37,7 @@ public class StudyService {
         return study.getId();
     }
 
+    @Transactional(readOnly = true)
     public StudyInfo findStudyInfoBy(Long studyId, Long memberId) {
         Study study = findStudyById(studyId);
 
@@ -44,12 +47,13 @@ public class StudyService {
     }
 
 
-
+    @Transactional(readOnly = true)
     public List<StudyInfo> findAllStudyInfosBy(StudyType studyType, Long memberId) {
         List<Study> studies = studyRepository.findAllByStudyTypeAndMemberId(studyType, memberId);
         return toStudiesInfo(studies);
     }
 
+    @Transactional(readOnly = true)
     public List<StudyInfo> findAllStudyInfosBy(Long memberId) {
         List<Study> studies = studyRepository.findAllByMemberId(memberId);
         return toStudiesInfo(studies);
@@ -59,6 +63,14 @@ public class StudyService {
         return studies.stream()
                 .map(StudyInfo::of)
                 .toList();
+    }
+
+    public void update(StudyUpdate studyUpdate, Long studyId, Long memberId) {
+        Study study = findStudyById(studyId);
+
+        validateAccessPermission(memberId, study.getMember().getId());
+
+        studyUpdate.updateStudy(study);
     }
 
     public void deleteStudyById(Long studyId) {
