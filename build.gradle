@@ -24,28 +24,34 @@ repositories {
 }
 
 dependencies {
-    // Spring Web
+    // spring Web
     implementation 'org.springframework.boot:spring-boot-starter-web'
 
-    // Persistence
+    // persistence
     implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
     implementation 'org.springframework.boot:spring-boot-starter-data-redis'
     runtimeOnly 'com.mysql:mysql-connector-j' // prod, dev
     runtimeOnly 'com.h2database:h2' // test
 
-    // Auth
+    // queryDsl
+    implementation 'com.querydsl:querydsl-jpa:5.0.0:jakarta'
+    annotationProcessor "com.querydsl:querydsl-apt:5.0.0:jakarta"
+    annotationProcessor "jakarta.annotation:jakarta.annotation-api"
+    annotationProcessor "jakarta.persistence:jakarta.persistence-api"
+
+    // auth
     implementation 'org.springframework.boot:spring-boot-starter-security'
 
-    // JWT
+    // jwt
     implementation "io.jsonwebtoken:jjwt:0.12.3"
     implementation 'javax.xml.bind:jaxb-api:2.4.0-b180830.0359'
 
-    // Util
+    // util
     implementation 'org.springframework.boot:spring-boot-starter-validation'
     compileOnly 'org.projectlombok:lombok'
     annotationProcessor 'org.projectlombok:lombok'
 
-    // Test
+    // test
     testImplementation 'org.springframework.boot:spring-boot-starter-test'
     testImplementation 'org.springframework.security:spring-security-test'
     testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
