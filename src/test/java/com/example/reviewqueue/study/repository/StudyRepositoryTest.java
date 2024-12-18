@@ -1,5 +1,6 @@
 package com.example.reviewqueue.study.repository;
 
+import com.example.reviewqueue.common.config.querydsl.QuerydslConfig;
 import com.example.reviewqueue.member.domain.Member;
 import com.example.reviewqueue.member.repository.MemberRepository;
 import com.example.reviewqueue.study.domain.Study;
@@ -7,6 +8,7 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
+import org.springframework.context.annotation.Import;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.jdbc.Sql;
 
@@ -16,6 +18,7 @@ import static com.example.reviewqueue.study.domain.StudyType.*;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.tuple;
 
+@Import(QuerydslConfig.class)
 @Sql(scripts = {"/member.sql"}, executionPhase = Sql.ExecutionPhase.BEFORE_TEST_CLASS)
 @ActiveProfiles("test")
 @DataJpaTest
