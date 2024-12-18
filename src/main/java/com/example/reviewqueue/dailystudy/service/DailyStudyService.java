@@ -54,8 +54,12 @@ public class DailyStudyService {
         return new DailyStudyDetailInfo(DailyStudyGeneralInfo.of(dailyStudy), studyKeywordsInfo);
     }
 
-    public List<DailyStudyGeneralInfo> findAllByStudyId(Long studyId, Long memberId) {
-        List<DailyStudy> dailyStudies = dailyStudyRepository.findAllByStudyId(studyId);
+    public List<DailyStudyGeneralInfo> findAllByConditions(DailyStudySearchCondition conditions, Long memberId) {
+        List<DailyStudy> dailyStudies = dailyStudyRepository.findAllByCondition(
+                conditions.getStudyId(),
+                conditions.getStartDate(),
+                conditions.getEndDate(),
+                conditions.isCreateDateSortDesc());
 
         validateAccessPermission(memberId, dailyStudies.get(0).getStudy().getMember().getId());
 
