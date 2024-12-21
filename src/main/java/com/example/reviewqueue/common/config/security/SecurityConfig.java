@@ -34,8 +34,9 @@ public class SecurityConfig {
                 .formLogin(AbstractHttpConfigurer::disable)
                 .authorizeHttpRequests(authorize -> authorize.requestMatchers(
                                 new AntPathRequestMatcher("/h2-console/**"),
-                                new AntPathRequestMatcher("/auth/sign-in"),
-                                new AntPathRequestMatcher("/member/sign-up"),
+                                new AntPathRequestMatcher("/oauth/kakao/login"),
+                                new AntPathRequestMatcher("/oauth/kakao/callback"),
+                                new AntPathRequestMatcher("/health/**"),
                                 new AntPathRequestMatcher("/token/**")
                         ).permitAll()
                         .anyRequest().authenticated())
