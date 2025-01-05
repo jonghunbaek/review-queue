@@ -14,8 +14,8 @@ public class OAuthService {
 
     private final KakaoOAuthClient kakaoOAuthClient;
 
-    public void getAuthCode() {
-        kakaoOAuthClient.getAuthCode();
+    public String getLoginUrl() {
+        return kakaoOAuthClient.getLoginUrl();
     }
 
     public OAuthTokens getAuthToken(String code) {

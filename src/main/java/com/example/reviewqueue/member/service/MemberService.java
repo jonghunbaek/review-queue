@@ -11,7 +11,7 @@ import java.util.UUID;
 
 @Slf4j
 @RequiredArgsConstructor
-@Transactional(readOnly = true)
+@Transactional
 @Service
 public class MemberService {
 
