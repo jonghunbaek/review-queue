@@ -30,6 +30,7 @@ jwt:
   issuer: jonghun
 
 oauth2:
+  redirect-uri: http://localhost:5173/study
   kakao:
     api-key:
       client-id: testId
