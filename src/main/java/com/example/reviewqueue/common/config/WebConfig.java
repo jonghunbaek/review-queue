@@ -8,6 +8,8 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
 import java.util.List;
 
+import static org.springframework.http.HttpHeaders.*;
+
 @Configuration
 public class WebConfig implements WebMvcConfigurer {
 
@@ -16,7 +18,7 @@ public class WebConfig implements WebMvcConfigurer {
         registry.addMapping("/**")
                 .allowedOrigins("http://localhost:5173")
                 .allowedMethods("GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS")
-                .allowedHeaders("*")
+                .allowedHeaders(AUTHORIZATION, ORIGIN, REFERER, CONTENT_TYPE)
                 .allowCredentials(true);
     }
 
