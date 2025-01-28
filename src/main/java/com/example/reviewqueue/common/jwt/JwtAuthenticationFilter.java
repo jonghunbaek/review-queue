@@ -3,6 +3,7 @@ package com.example.reviewqueue.common.jwt;
 import io.jsonwebtoken.JwtException;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
+import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
@@ -15,31 +16,36 @@ import org.springframework.util.StringUtils;
 import org.springframework.web.filter.OncePerRequestFilter;
 
 import java.io.IOException;
+import java.util.Arrays;
 import java.util.Collections;
-import java.util.Optional;
-
-import static org.springframework.http.HttpHeaders.AUTHORIZATION;
 
 @Slf4j
 @RequiredArgsConstructor
 public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
-    public static final String AUTH_TYPE = "Bearer ";
     public static final String EXCEPTION_KEY = "exception";
 
     private final JwtManager jwtManager;
 
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws IOException, ServletException {
-        Optional.ofNullable(request.getHeader(AUTHORIZATION))
-                .ifPresent(token -> authorize(request, token));
+        String accessToken = getTokenFromCookies(request.getCookies());
 
+        authorize(request, accessToken);
         filterChain.doFilter(request, response);
     }
 
-    private void authorize(HttpServletRequest request, String tokenWithBearer) {
+    private String getTokenFromCookies(Cookie[] cookies) {
+        return Arrays.stream(cookies)
+                .filter(cookie -> cookie.getName().equals("access_token"))
+                .findFirst()
+                .orElseThrow(() -> new IllegalArgumentException("토큰이 존재 하지 않습니다."))
+                .getValue();
+    }
+
+    private void authorize(HttpServletRequest request, String accessToken) {
         try {
-            String accessToken = extractToken(tokenWithBearer);
+            validateNone(accessToken);
 
             Authentication authentication = createAuthentication(accessToken);
             SecurityContextHolder.getContext().setAuthentication(authentication);
@@ -49,23 +55,9 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
         }
     }
 
-    private String extractToken(String tokenWithBearer) {
-        validateNone(tokenWithBearer);
-        String authType = tokenWithBearer.substring(0, AUTH_TYPE.length());
-
-        validateAuthType(authType);
-        return tokenWithBearer.substring(AUTH_TYPE.length());
-    }
-
     private void validateNone(String tokenWithBearer) {
         if (!StringUtils.hasText(tokenWithBearer)) {
             throw new IllegalArgumentException("토큰 값이 존재하지 않습니다.");
-        }
-    }
-
-    private void validateAuthType(String authType) {
-        if (!authType.equalsIgnoreCase(AUTH_TYPE)) {
-            throw new IllegalArgumentException("AUTH_TYPE이 일치하지 않습니다. AUTH_TYPE :: " + authType);
         }
     }
 
