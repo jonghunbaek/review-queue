@@ -12,6 +12,7 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.util.AntPathMatcher;
 import org.springframework.util.StringUtils;
 import org.springframework.web.filter.OncePerRequestFilter;
 
@@ -24,8 +25,22 @@ import java.util.Collections;
 public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
     public static final String EXCEPTION_KEY = "exception";
+    public static final String[] WHITE_LIST = {
+        "/h2-console/**",
+        "/oauth/kakao/**",
+        "/health/**",
+        "/token/**"
+    };
 
     private final JwtManager jwtManager;
+
+    @Override
+    protected boolean shouldNotFilter(HttpServletRequest request) {
+        AntPathMatcher matcher = new AntPathMatcher();
+
+        return Arrays.stream(WHITE_LIST)
+                .anyMatch(url -> matcher.match(url, request.getRequestURI()));
+    }
 
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws IOException, ServletException {
@@ -64,6 +79,6 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
     private Authentication createAuthentication(String accessToken) {
         String memberId = jwtManager.parseAccessToken(accessToken);
 
-        return new UsernamePasswordAuthenticationToken(memberId, "", Collections.singletonList(new SimpleGrantedAuthority("")));
+        return new UsernamePasswordAuthenticationToken(memberId, "", Collections.singletonList(new SimpleGrantedAuthority("USER")));
     }
 }

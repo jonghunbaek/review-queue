@@ -62,7 +62,7 @@ public class SecurityConfig {
         return request -> {
             CorsConfiguration config = new CorsConfiguration();
             config.setAllowedOriginPatterns(Collections.singletonList("http://localhost:5173"));
-            config.setAllowedHeaders(List.of(AUTHORIZATION, ORIGIN, REFERER, CONTENT_TYPE));
+            config.setAllowedHeaders(List.of(AUTHORIZATION, ORIGIN, REFERER, CONTENT_TYPE, COOKIE));
             config.setAllowedMethods(List.of(GET.name(), POST.name(), PUT.name(), PATCH.name(), DELETE.name(), OPTIONS.name()));
             config.setAllowCredentials(true);
             return config;
