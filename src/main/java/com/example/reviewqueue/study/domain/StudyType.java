@@ -2,6 +2,7 @@ package com.example.reviewqueue.study.domain;
 
 public enum StudyType {
 
+    ETC("기타"),
     LECTURE("강의"),
     BOOK("도서"),
     CODING_TEST("코딩 테스트");
