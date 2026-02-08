@@ -2,7 +2,7 @@ package com.example.reviewqueue.common.util;
 
 import com.example.reviewqueue.common.jwt.Tokens;
 import com.example.reviewqueue.common.response.ResponseForm;
-import com.fasterxml.jackson.databind.ObjectMapper;
+import tools.jackson.databind.ObjectMapper;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpHeaders;

@@ -1,8 +1,8 @@
 package com.example.reviewqueue.common.exception;
 
 import com.example.reviewqueue.common.response.ResponseForm;
-import com.fasterxml.jackson.databind.JsonMappingException;
-import com.fasterxml.jackson.databind.exc.InvalidFormatException;
+import tools.jackson.core.JacksonException;
+import tools.jackson.databind.exc.InvalidFormatException;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.TypeMismatchException;
 import org.springframework.http.ResponseEntity;
@@ -54,7 +54,7 @@ public class GlobalExceptionHandler {
 
     private String getField(InvalidFormatException e) {
         return e.getPath().stream()
-                .map(JsonMappingException.Reference::getFieldName)
+                .map(JacksonException.Reference::getPropertyName)
                 .findFirst()
                 .orElse("unknown field");
     }

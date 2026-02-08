@@ -1,8 +1,8 @@
 package com.example.reviewqueue.common.response;
 
 import com.example.reviewqueue.common.exception.GlobalException;
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
+import tools.jackson.core.JacksonException;
+import tools.jackson.databind.ObjectMapper;
 import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.core.MethodParameter;
 import org.springframework.http.HttpStatus;
@@ -66,7 +66,7 @@ public class CommonResponseBodyAdvice implements ResponseBodyAdvice<Object> {
             response.getHeaders().setContentType(MediaType.APPLICATION_JSON);
 
             return json;
-        } catch (JsonProcessingException e){
+        } catch (JacksonException e){
             throw new GlobalException(E90000);
         }
     }
