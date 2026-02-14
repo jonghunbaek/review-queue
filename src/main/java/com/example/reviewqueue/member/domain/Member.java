@@ -1,6 +1,7 @@
 package com.example.reviewqueue.member.domain;
 
 import com.example.reviewqueue.common.domain.BaseEntity;
+import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -18,20 +19,17 @@ public class Member extends BaseEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    private Long socialId;
-
+    @Column(nullable = false, unique = true)
     private String email;
+
+    @Column(nullable = false)
+    private String password;
 
     private String nickname;
 
-    public Member(String email, String nickname) {
+    public Member(String email, String password, String nickname) {
         this.email = email;
-        this.nickname = nickname;
-    }
-
-    public Member(Long socialId, String email, String nickname) {
-        this.socialId = socialId;
-        this.email = email;
+        this.password = password;
         this.nickname = nickname;
     }
 }

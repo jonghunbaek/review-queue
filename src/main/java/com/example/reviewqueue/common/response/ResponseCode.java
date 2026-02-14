@@ -31,6 +31,8 @@ public enum ResponseCode {
     E00005("해당 토큰은 사용 불가한 토큰입니다.", UNAUTHORIZED),
     E00006("토큰의 형식이 잘못됐습니다.", UNAUTHORIZED),
     E00007("해당 리소스에 대한 접근 권한이 없습니다.", UNAUTHORIZED),
+    E00008("이미 등록된 이메일입니다.", CONFLICT),
+    E00009("이메일 또는 비밀번호가 올바르지 않습니다.", UNAUTHORIZED),
 
     E10000("조회할 수 있는 회원이 없습니다.", BAD_REQUEST),
 

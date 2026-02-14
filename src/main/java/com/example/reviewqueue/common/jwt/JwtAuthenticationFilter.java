@@ -27,7 +27,8 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
     public static final String EXCEPTION_KEY = "exception";
     public static final String[] WHITE_LIST = {
         "/h2-console/**",
-        "/oauth/kakao/**",
+        "/auth/signup",
+        "/auth/login",
         "/health/**",
         "/token/**"
     };
