@@ -23,6 +23,12 @@ public class SignupRequest {
     @Size(min = 2, max = 20)
     private String nickname;
 
+    public SignupRequest(String email, String password, String nickname) {
+        this.email = email;
+        this.password = password;
+        this.nickname = nickname;
+    }
+
     public Member toEntity(String encodedPassword) {
         return new Member(email, encodedPassword, nickname);
     }
