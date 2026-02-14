@@ -24,7 +24,7 @@ public class AuthController {
     private final AuthService authService;
     private final TokenService tokenService;
 
-    @PostMapping("/sign-up")
+    @PostMapping("/signup")
     public void signup(@Valid @RequestBody SignupRequest request, HttpServletResponse response) {
         Long memberId = authService.signUp(request);
         Tokens tokens = tokenService.createTokens(memberId);

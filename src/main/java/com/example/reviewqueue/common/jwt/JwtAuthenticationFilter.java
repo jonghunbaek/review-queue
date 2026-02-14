@@ -19,27 +19,22 @@ import org.springframework.web.filter.OncePerRequestFilter;
 import java.io.IOException;
 import java.util.Arrays;
 import java.util.Collections;
+import java.util.List;
 
 @Slf4j
 @RequiredArgsConstructor
 public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
     public static final String EXCEPTION_KEY = "exception";
-    public static final String[] WHITE_LIST = {
-        "/h2-console/**",
-        "/auth/signup",
-        "/auth/login",
-        "/health/**",
-        "/token/**"
-    };
 
     private final JwtManager jwtManager;
+    private final List<String> whitelist;
 
     @Override
     protected boolean shouldNotFilter(HttpServletRequest request) {
         AntPathMatcher matcher = new AntPathMatcher();
 
-        return Arrays.stream(WHITE_LIST)
+        return whitelist.stream()
                 .anyMatch(url -> matcher.match(url, request.getRequestURI()));
     }
 

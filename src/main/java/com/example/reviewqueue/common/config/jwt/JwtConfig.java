@@ -1,5 +1,6 @@
 package com.example.reviewqueue.common.config.jwt;
 
+import com.example.reviewqueue.common.config.security.SecurityProperties;
 import com.example.reviewqueue.common.jwt.JwtAccessDeniedHandler;
 import com.example.reviewqueue.common.jwt.JwtAuthenticationEntryPoint;
 import com.example.reviewqueue.common.jwt.JwtAuthenticationFilter;
@@ -29,8 +30,8 @@ public class JwtConfig {
     }
 
     @Bean
-    public JwtAuthenticationFilter jwtAuthenticationFilter(JwtManager jwtManager) {
-        return new JwtAuthenticationFilter(jwtManager);
+    public JwtAuthenticationFilter jwtAuthenticationFilter(JwtManager jwtManager, SecurityProperties securityProperties) {
+        return new JwtAuthenticationFilter(jwtManager, securityProperties.whitelist());
     }
 
     @Bean
