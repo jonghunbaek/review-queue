@@ -11,7 +11,7 @@ import java.util.List;
 @RequestMapping("/api/v1/review-reminders")
 @RequiredArgsConstructor
 @RestController
-public class ReviewReminderController {
+public class ReviewReminderController implements ReviewReminderApi {
 
     private final ReviewReminderService reviewReminderService;
 

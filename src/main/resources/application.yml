@@ -3,6 +3,16 @@ security:
     - /h2-console/**
     - /api/v1/auth/signup
     - /api/v1/auth/login
+    - /swagger-ui/**
+    - /swagger-ui.html
+    - /v3/api-docs
+    - /v3/api-docs/**
+
+springdoc:
+  api-docs:
+    enabled: false
+  swagger-ui:
+    enabled: false
 
 ---
 
@@ -35,6 +45,12 @@ spring:
     redis:
       host: localhost
       port: 6379
+
+springdoc:
+  api-docs:
+    enabled: true
+  swagger-ui:
+    enabled: true
 
 jwt:
   secret-key: NiOeyFbN1Gqo10bPgUyTFsRMkJpGLXSvGP04eFqj5B30r5TcrtlSXfQ7TndvYjNvfkEKLqILn0j1SmKODO6Yw3JpBBgI6nVPEbhqxeY1qbPSFGyzyEVxnl4bQcrnVneI

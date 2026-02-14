@@ -13,7 +13,7 @@ import java.util.List;
 @RequiredArgsConstructor
 @RequestMapping("/api/v1/study-keywords")
 @RestController
-public class StudyKeywordController {
+public class StudyKeywordController implements StudyKeywordApi {
 
     private final StudyKeywordService studyKeywordService;
 

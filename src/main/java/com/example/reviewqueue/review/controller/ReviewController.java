@@ -13,7 +13,7 @@ import java.time.LocalDate;
 @RequestMapping("/api/v1/reviews")
 @RequiredArgsConstructor
 @RestController
-public class ReviewController {
+public class ReviewController implements ReviewApi {
 
     private final ReviewService reviewService;
 

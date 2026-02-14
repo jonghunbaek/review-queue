@@ -17,7 +17,7 @@ import java.util.List;
 @RequiredArgsConstructor
 @RequestMapping("/api/v1/daily-studies")
 @RestController
-public class DailyStudyController {
+public class DailyStudyController implements DailyStudyApi {
 
     private final DailyStudyService dailyStudyService;
 

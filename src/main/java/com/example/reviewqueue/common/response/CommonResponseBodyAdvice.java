@@ -21,7 +21,8 @@ public class CommonResponseBodyAdvice implements ResponseBodyAdvice<Object> {
 
     @Override
     public boolean supports(MethodParameter returnType, Class converterType) {
-        return true;
+        String packageName = returnType.getContainingClass().getPackageName();
+        return !packageName.startsWith("org.springdoc");
     }
 
     @Override

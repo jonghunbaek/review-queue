@@ -19,7 +19,7 @@ import static com.example.reviewqueue.common.util.ResponseManager.setUpTokensToC
 @RequiredArgsConstructor
 @RequestMapping("/api/v1/auth")
 @RestController
-public class AuthController {
+public class AuthController implements AuthApi {
 
     private final AuthService authService;
     private final TokenService tokenService;
