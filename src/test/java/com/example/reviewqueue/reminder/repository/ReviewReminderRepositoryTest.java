@@ -10,7 +10,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.data.jpa.test.autoconfigure.DataJpaTest;
 import org.springframework.context.annotation.Import;
 import org.springframework.test.context.ActiveProfiles;
-import org.springframework.test.context.jdbc.Sql;
 
 import java.time.LocalDate;
 import java.util.List;
@@ -18,7 +17,6 @@ import java.util.List;
 import static org.assertj.core.api.Assertions.assertThat;
 
 @Import(QuerydslConfig.class)
-@Sql(scripts = {"/member.sql"}, executionPhase = Sql.ExecutionPhase.BEFORE_TEST_CLASS)
 @ActiveProfiles("test")
 @DataJpaTest
 class ReviewReminderRepositoryTest {
@@ -33,7 +31,7 @@ class ReviewReminderRepositoryTest {
     @Test
     void existsReviewRemindersByMemberIdAndReadIsFalse() {
         // given
-        Member member = memberRepository.findAll().get(0);
+        Member member = memberRepository.save(new Member("test@email.com", "password", "테스터"));
         ReviewReminder reminder1 = new ReviewReminder(LocalDate.of(2024, 11, 20), member);
         ReviewReminder reminder2 = new ReviewReminder(LocalDate.of(2024, 11, 21), member);
         reminder1.read();

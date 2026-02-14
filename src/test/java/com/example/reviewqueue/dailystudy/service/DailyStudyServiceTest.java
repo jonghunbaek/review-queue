@@ -8,15 +8,14 @@ import com.example.reviewqueue.dailystudy.service.dto.DailyStudySearchCondition;
 import com.example.reviewqueue.member.domain.Member;
 import com.example.reviewqueue.member.repository.MemberRepository;
 import com.example.reviewqueue.study.domain.Study;
+import com.example.reviewqueue.study.domain.StudyType;
 import com.example.reviewqueue.study.repository.StudyRepository;
-import com.example.reviewqueue.studykeyword.domain.StudyKeyword;
 import com.example.reviewqueue.studykeyword.repository.StudyKeywordRepository;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.ActiveProfiles;
-import org.springframework.test.context.jdbc.Sql;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDate;
@@ -25,7 +24,6 @@ import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-@Sql(scripts = {"/member.sql", "/study.sql"}, executionPhase = Sql.ExecutionPhase.BEFORE_TEST_CLASS)
 @ActiveProfiles("test")
 @Transactional
 @SpringBootTest
@@ -50,13 +48,12 @@ class DailyStudyServiceTest {
     @Test
     void saveDailyStudyAndKeywords() {
         // given
-        Member member = memberRepository.findAll().get(0);
-        Study study = studyRepository.findAll().get(0);
+        Member member = memberRepository.save(new Member("test@email.com", "password", "테스터"));
+        Study study = studyRepository.save(new Study(StudyType.BOOK, "Real MySQL", "MySQL 관련 도서", member));
         DailyStudySave dailyStudySave = new DailyStudySave(study.getId(), "8.인덱스(p230 ~ p250");
 
         // when
         DailyStudyGeneralInfo savingInfo = dailyStudyService.save(dailyStudySave);
-        List<StudyKeyword> keywords = studyKeywordRepository.findAllByDailyStudyId(savingInfo.getDailyStudyId());
 
         // then
         assertThat(savingInfo.getStudyRange()).isEqualTo("8.인덱스(p230 ~ p250");
@@ -66,8 +63,8 @@ class DailyStudyServiceTest {
     @Test
     void findAllByConditions() {
         // given
-        Member member = memberRepository.findAll().get(0);
-        Study study = studyRepository.findAll().get(0);
+        Member member = memberRepository.save(new Member("test2@email.com", "password", "테스터2"));
+        Study study = studyRepository.save(new Study(StudyType.BOOK, "Real MySQL", "MySQL 관련 도서", member));
         DailyStudy dailyStudy1 = new DailyStudy("범위1", LocalDateTime.of(2024, 12, 15, 0, 0, 0), study);
         DailyStudy dailyStudy2 = new DailyStudy("범위2", LocalDateTime.of(2024, 12, 16, 0, 0, 0), study);
         DailyStudy dailyStudy3 = new DailyStudy("범위3", LocalDateTime.of(2024, 12, 17, 0, 0, 0), study);

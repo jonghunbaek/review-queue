@@ -10,7 +10,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.data.jpa.test.autoconfigure.DataJpaTest;
 import org.springframework.context.annotation.Import;
 import org.springframework.test.context.ActiveProfiles;
-import org.springframework.test.context.jdbc.Sql;
 
 import java.util.List;
 
@@ -19,7 +18,6 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.tuple;
 
 @Import(QuerydslConfig.class)
-@Sql(scripts = {"/member.sql"}, executionPhase = Sql.ExecutionPhase.BEFORE_TEST_CLASS)
 @ActiveProfiles("test")
 @DataJpaTest
 class StudyRepositoryTest {
@@ -34,7 +32,7 @@ class StudyRepositoryTest {
     @Test
     void findAllByMemberId() {
         // given
-        Member member = memberRepository.findAll().get(0);
+        Member member = memberRepository.save(new Member("test@email.com", "password", "테스터"));
 
         Study study1 = new Study(BOOK, "Real MySQL", "MySQL 관련 도서", member);
         Study study2 = new Study(LECTURE, "김영한 자바 고급", "자바 고급 강의", member);
@@ -59,11 +57,10 @@ class StudyRepositoryTest {
     @Test
     void findAllStudyInfosBy() {
         // given
-        Member member = memberRepository.findAll().get(0);
+        Member member = memberRepository.save(new Member("test2@email.com", "password", "테스터2"));
         Study study1 = new Study(BOOK, "Real MySQL", "MySQL 관련 도서", member);
         Study study2 = new Study(LECTURE, "김영한 자바 고급", "자바 고급 강의", member);
         Study study3 = new Study(LECTURE, "김영한 스프링 고급", "스프링 고급 강의", member);
-        Study study4 = new Study(CODING_TEST, "프로그래머스 입국 순서", "이분 탐색 알고리즘", member);
 
         studyRepository.saveAll(List.of(study1, study2, study3));
 

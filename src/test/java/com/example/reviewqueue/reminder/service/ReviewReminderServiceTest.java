@@ -12,13 +12,13 @@ import com.example.reviewqueue.reminder.service.dto.ReminderInfo;
 import com.example.reviewqueue.review.domain.Review;
 import com.example.reviewqueue.review.repository.ReviewRepository;
 import com.example.reviewqueue.study.domain.Study;
+import com.example.reviewqueue.study.domain.StudyType;
 import com.example.reviewqueue.study.repository.StudyRepository;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.ActiveProfiles;
-import org.springframework.test.context.jdbc.Sql;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDate;
@@ -26,7 +26,6 @@ import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-@Sql(scripts = {"/member.sql", "/study.sql"}, executionPhase = Sql.ExecutionPhase.BEFORE_TEST_CLASS)
 @ActiveProfiles("test")
 @Transactional
 @SpringBootTest
@@ -56,8 +55,9 @@ class ReviewReminderServiceTest {
     @DisplayName("사용자 아이디에 해당하는 읽지 않은 알람을 모두 조회한다.")
     @Test
     void findUnreadReminderReviewData() {
-        Member member = memberRepository.findAll().get(0);
-        Study study = studyRepository.findAll().get(0);
+        // given
+        Member member = memberRepository.save(new Member("test@email.com", "password", "테스터"));
+        Study study = studyRepository.save(new Study(StudyType.BOOK, "Real MySQL", "MySQL 관련 도서", member));
         LocalDate studyDate = LocalDate.of(2024, 10, 31);
         DailyStudy dailyStudy = dailyStudyRepository.save(new DailyStudy("8장 인덱스, p200-210", studyDate.atTime(0,0), study));
 

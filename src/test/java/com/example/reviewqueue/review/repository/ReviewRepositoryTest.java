@@ -7,6 +7,7 @@ import com.example.reviewqueue.member.domain.Member;
 import com.example.reviewqueue.member.repository.MemberRepository;
 import com.example.reviewqueue.review.domain.Review;
 import com.example.reviewqueue.study.domain.Study;
+import com.example.reviewqueue.study.domain.StudyType;
 import com.example.reviewqueue.study.repository.StudyRepository;
 import com.example.reviewqueue.studykeyword.domain.StudyKeyword;
 import com.example.reviewqueue.studykeyword.repository.StudyKeywordRepository;
@@ -16,7 +17,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.data.jpa.test.autoconfigure.DataJpaTest;
 import org.springframework.context.annotation.Import;
 import org.springframework.test.context.ActiveProfiles;
-import org.springframework.test.context.jdbc.Sql;
 
 import java.time.LocalDate;
 import java.util.List;
@@ -24,7 +24,6 @@ import java.util.List;
 import static org.assertj.core.api.Assertions.assertThat;
 
 @Import(QuerydslConfig.class)
-@Sql(scripts = {"/member.sql", "/study.sql"}, executionPhase = Sql.ExecutionPhase.BEFORE_TEST_CLASS)
 @ActiveProfiles("test")
 @DataJpaTest
 class ReviewRepositoryTest {
@@ -47,7 +46,9 @@ class ReviewRepositoryTest {
     @DisplayName("복습날짜에 해당하는 모든 복습을 조회한다.")
     @Test
     void findAllByReviewDate() {
-        Study study = studyRepository.findAll().get(0);
+        // given
+        Member member = memberRepository.save(new Member("test@email.com", "password", "테스터"));
+        Study study = studyRepository.save(new Study(StudyType.BOOK, "Real MySQL", "MySQL 관련 도서", member));
         LocalDate studyDate1 = LocalDate.of(2024, 10, 31);
         LocalDate studyDate2 = LocalDate.of(2024, 11, 1);
         DailyStudy dailyStudy1 = dailyStudyRepository.save(new DailyStudy("8장 인덱스, p200-210", studyDate1.atTime(0,0), study));
@@ -73,8 +74,9 @@ class ReviewRepositoryTest {
     @DisplayName("복습 날짜와 사용자 아이디에 해당하는 모든 복습을 조회한다.")
     @Test
     void findAllByReviewDateAndMemberId() {
-        Member member = memberRepository.findAll().get(0);
-        Study study = studyRepository.findAll().get(0);
+        // given
+        Member member = memberRepository.save(new Member("test2@email.com", "password", "테스터2"));
+        Study study = studyRepository.save(new Study(StudyType.BOOK, "Real MySQL", "MySQL 관련 도서", member));
         LocalDate studyDate1 = LocalDate.of(2024, 10, 31);
         LocalDate studyDate2 = LocalDate.of(2024, 11, 1);
         DailyStudy dailyStudy1 = dailyStudyRepository.save(new DailyStudy("8장 인덱스, p200-210", studyDate1.atTime(0,0), study));
@@ -100,8 +102,9 @@ class ReviewRepositoryTest {
     @DisplayName("일일 학습 아이디로 완료하지 않은 모든 복습을 조회한다.")
     @Test
     void findAllByIsCompletedIsFalseAndDailyStudyId() {
-        Member member = memberRepository.findAll().get(0);
-        Study study = studyRepository.findAll().get(0);
+        // given
+        Member member = memberRepository.save(new Member("test3@email.com", "password", "테스터3"));
+        Study study = studyRepository.save(new Study(StudyType.BOOK, "Real MySQL", "MySQL 관련 도서", member));
         LocalDate studyDate1 = LocalDate.of(2024, 10, 31);
         DailyStudy dailyStudy = dailyStudyRepository.save(new DailyStudy("8장 인덱스, p200-210", studyDate1.atTime(0,0), study));
 

@@ -15,7 +15,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.data.jpa.test.autoconfigure.DataJpaTest;
 import org.springframework.context.annotation.Import;
 import org.springframework.test.context.ActiveProfiles;
-import org.springframework.test.context.jdbc.Sql;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -24,7 +23,6 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.tuple;
 
 @Import(QuerydslConfig.class)
-@Sql(scripts = {"/member.sql"}, executionPhase = Sql.ExecutionPhase.BEFORE_TEST_CLASS)
 @ActiveProfiles("test")
 @DataJpaTest
 class StudyKeywordRepositoryTest {
@@ -45,7 +43,7 @@ class StudyKeywordRepositoryTest {
     @Test
     void findAllByDailyStudyId() {
         // given
-        Member member = memberRepository.findAll().get(0);
+        Member member = memberRepository.save(new Member("test@email.com", "password", "테스터"));
         Study study = studyRepository.save(new Study(StudyType.BOOK, "Real MySQL", "MySQL 관련 도서", member));
         DailyStudy dailyStudy = dailyStudyRepository.save(new DailyStudy("8.인덱스", LocalDateTime.now(), study));
 

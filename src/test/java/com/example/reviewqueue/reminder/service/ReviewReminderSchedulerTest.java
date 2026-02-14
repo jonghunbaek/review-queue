@@ -1,30 +1,30 @@
 package com.example.reviewqueue.reminder.service;
 
 import com.example.reviewqueue.dailystudy.domain.DailyStudy;
-import com.example.reviewqueue.studykeyword.domain.StudyKeyword;
 import com.example.reviewqueue.dailystudy.repository.DailyStudyRepository;
-import com.example.reviewqueue.studykeyword.repository.StudyKeywordRepository;
+import com.example.reviewqueue.member.domain.Member;
+import com.example.reviewqueue.member.repository.MemberRepository;
 import com.example.reviewqueue.reminder.domain.ReviewReminder;
 import com.example.reviewqueue.reminder.repository.ReviewReminderRepository;
 import com.example.reviewqueue.review.domain.Review;
 import com.example.reviewqueue.review.repository.ReviewRepository;
 import com.example.reviewqueue.study.domain.Study;
+import com.example.reviewqueue.study.domain.StudyType;
 import com.example.reviewqueue.study.repository.StudyRepository;
+import com.example.reviewqueue.studykeyword.domain.StudyKeyword;
+import com.example.reviewqueue.studykeyword.repository.StudyKeywordRepository;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.ActiveProfiles;
-import org.springframework.test.context.jdbc.Sql;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDate;
 import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.junit.jupiter.api.Assertions.assertAll;
 
-@Sql(scripts = {"/member.sql", "/study.sql"}, executionPhase = Sql.ExecutionPhase.BEFORE_TEST_CLASS)
 @ActiveProfiles("test")
 @Transactional
 @SpringBootTest
@@ -32,6 +32,9 @@ class ReviewReminderSchedulerTest {
 
     @Autowired
     private ReviewReminderScheduler reviewReminderScheduler;
+
+    @Autowired
+    private MemberRepository memberRepository;
 
     @Autowired
     private DailyStudyRepository dailyStudyRepository;
@@ -51,7 +54,9 @@ class ReviewReminderSchedulerTest {
     @DisplayName("매일 아침 5시 복습할 내용이 존재하면 복습 알람을 저장한다.")
     @Test
     void addReminder() {
-        Study study = studyRepository.findAll().get(0);
+        // given
+        Member member = memberRepository.save(new Member("test@email.com", "password", "테스터"));
+        Study study = studyRepository.save(new Study(StudyType.BOOK, "Real MySQL", "MySQL 관련 도서", member));
         LocalDate studyDate = LocalDate.of(2024, 10, 31);
         DailyStudy dailyStudy = dailyStudyRepository.save(new DailyStudy("8장 인덱스, p200-210", studyDate.atTime(0,0), study));
 

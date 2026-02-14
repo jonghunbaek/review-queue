@@ -18,7 +18,6 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.ActiveProfiles;
-import org.springframework.test.context.jdbc.Sql;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDate;
@@ -27,7 +26,6 @@ import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-@Sql(scripts = {"/member.sql", "/study.sql"}, executionPhase = Sql.ExecutionPhase.BEFORE_TEST_CLASS)
 @ActiveProfiles("test")
 @Transactional
 @SpringBootTest
@@ -55,13 +53,14 @@ class ReviewServiceTest {
     @Test
     void saveReviewQueue() {
         // given
-        Study study = studyRepository.findAll().get(0);
+        Member member = memberRepository.save(new Member("test@email.com", "password", "테스터"));
+        Study study = studyRepository.save(new Study(StudyType.BOOK, "Real MySQL", "MySQL 관련 도서", member));
         LocalDate startDate = LocalDate.of(2024, 10, 31);
         DailyStudy dailyStudy = dailyStudyRepository.save(new DailyStudy("학습 1", startDate.atTime(0,0), study));
         ReviewQueueSave reviewQueueSave = new ReviewQueueSave(dailyStudy.getId(), 5, 1, 2, 3, 4, 5);
 
         // when
-        reviewService.save(reviewQueueSave, 1L);
+        reviewService.save(reviewQueueSave, member.getId());
         List<Review> reviews = reviewRepository.findAll();
 
         // then
@@ -79,8 +78,9 @@ class ReviewServiceTest {
     @DisplayName("파라미터로 전달 받은 날짜에 해당하는 복습 데이터를 가져온다.")
     @Test
     void findReviewDataByDate() {
-        Member member = memberRepository.findAll().get(0);
-        Study study = studyRepository.findAll().get(0);
+        // given
+        Member member = memberRepository.save(new Member("test2@email.com", "password", "테스터2"));
+        Study study = studyRepository.save(new Study(StudyType.BOOK, "Real MySQL", "MySQL 관련 도서", member));
         LocalDate studyDate1 = LocalDate.of(2024, 10, 31);
         LocalDate studyDate2 = LocalDate.of(2024, 10, 31);
         DailyStudy dailyStudy1 = dailyStudyRepository.save(new DailyStudy("8장 인덱스, p200-210", studyDate1.atTime(0,0), study));
@@ -94,8 +94,8 @@ class ReviewServiceTest {
 
         ReviewQueueSave reviewQueueSave1 = new ReviewQueueSave(dailyStudy1.getId(), 5, 1, 2, 3, 4, 5);
         ReviewQueueSave reviewQueueSave2 = new ReviewQueueSave(dailyStudy2.getId(), 5, 1, 2, 3, 4, 5);
-        reviewService.save(reviewQueueSave1, 1L);
-        reviewService.save(reviewQueueSave2, 1L);
+        reviewService.save(reviewQueueSave1, member.getId());
+        reviewService.save(reviewQueueSave2, member.getId());
 
         // when
         LocalDate reviewDate = LocalDate.of(2024, 11, 3);
@@ -109,8 +109,8 @@ class ReviewServiceTest {
     @Test
     void findMemberIdsByReviewDate() {
         // given
-        Member member1 = memberRepository.save(new Member("sample1@sample.com", "sample1"));
-        Member member2 = memberRepository.save(new Member("sample2@sample.com", "sample2"));
+        Member member1 = memberRepository.save(new Member("sample1@sample.com", "password1", "sample1"));
+        Member member2 = memberRepository.save(new Member("sample2@sample.com", "password2", "sample2"));
         Study study1 = studyRepository.save(new Study(StudyType.BOOK, "소프트웨어 장인", "좋은 책", member1));
         Study study2 = studyRepository.save(new Study(StudyType.LECTURE, "김영한의 Spring", "좋은 강의", member2));
         DailyStudy dailyStudy1 = dailyStudyRepository.save(new DailyStudy("일일 학습1", LocalDateTime.of(2024, 11, 15, 12, 0), study1));
