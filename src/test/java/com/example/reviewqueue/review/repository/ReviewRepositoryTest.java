@@ -99,6 +99,48 @@ class ReviewRepositoryTest {
         assertThat(reviews).hasSize(2);
     }
 
+    @DisplayName("복습날짜에 해당하는 미완료 복습만 조회한다.")
+    @Test
+    void findAllByReviewDateAndIsCompletedIsFalse() {
+        // given
+        Member member = memberRepository.save(new Member("test4@email.com", "password", "테스터4"));
+        Study study = studyRepository.save(new Study(StudyType.BOOK, "Real MySQL", "MySQL 관련 도서", member));
+        DailyStudy dailyStudy = dailyStudyRepository.save(new DailyStudy("8장 인덱스, p200-210", LocalDate.of(2024, 10, 31).atTime(0, 0), study));
+
+        LocalDate targetDate = LocalDate.of(2024, 11, 2);
+        Review review1 = new Review(LocalDate.of(2024, 11, 1), targetDate, dailyStudy);
+        Review review2 = new Review(LocalDate.of(2024, 11, 1), targetDate, dailyStudy);
+        Review review3 = new Review(LocalDate.of(2024, 11, 1), targetDate, dailyStudy);
+        review1.completeReview();
+        reviewRepository.saveAll(List.of(review1, review2, review3));
+
+        // when
+        List<Review> reviews = reviewRepository.findAllByReviewDateAndIsCompletedIsFalse(targetDate);
+
+        // then
+        assertThat(reviews).hasSize(2);
+    }
+
+    @DisplayName("해당 날짜에 미완료 복습이 없으면 빈 리스트를 반환한다.")
+    @Test
+    void findAllByReviewDateAndIsCompletedIsFalse_allCompleted() {
+        // given
+        Member member = memberRepository.save(new Member("test5@email.com", "password", "테스터5"));
+        Study study = studyRepository.save(new Study(StudyType.BOOK, "Real MySQL", "MySQL 관련 도서", member));
+        DailyStudy dailyStudy = dailyStudyRepository.save(new DailyStudy("8장 인덱스", LocalDate.of(2024, 10, 31).atTime(0, 0), study));
+
+        LocalDate targetDate = LocalDate.of(2024, 11, 2);
+        Review review = new Review(LocalDate.of(2024, 11, 1), targetDate, dailyStudy);
+        review.completeReview();
+        reviewRepository.save(review);
+
+        // when
+        List<Review> reviews = reviewRepository.findAllByReviewDateAndIsCompletedIsFalse(targetDate);
+
+        // then
+        assertThat(reviews).isEmpty();
+    }
+
     @DisplayName("일일 학습 아이디로 완료하지 않은 모든 복습을 조회한다.")
     @Test
     void findAllByIsCompletedIsFalseAndDailyStudyId() {

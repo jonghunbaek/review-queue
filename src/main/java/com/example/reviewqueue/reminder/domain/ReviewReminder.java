@@ -2,6 +2,7 @@ package com.example.reviewqueue.reminder.domain;
 
 import com.example.reviewqueue.common.domain.BaseEntity;
 import com.example.reviewqueue.member.domain.Member;
+import com.example.reviewqueue.review.domain.Review;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.Getter;
@@ -26,9 +27,13 @@ public class ReviewReminder extends BaseEntity {
     @ManyToOne
     private Member member;
 
-    public ReviewReminder(LocalDate reminderDate, Member member) {
+    @ManyToOne
+    private Review review;
+
+    public ReviewReminder(LocalDate reminderDate, Member member, Review review) {
         this.reminderDate = reminderDate;
         this.member = member;
+        this.review = review;
         this.isRead = false;
     }
 

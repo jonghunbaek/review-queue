@@ -1,12 +1,10 @@
 package com.example.reviewqueue.reminder.service;
 
 import com.example.reviewqueue.common.response.ResponseCode;
-import com.example.reviewqueue.member.domain.Member;
-import com.example.reviewqueue.member.repository.MemberRepository;
 import com.example.reviewqueue.reminder.domain.ReviewReminder;
 import com.example.reviewqueue.reminder.repository.ReviewReminderRepository;
-import com.example.reviewqueue.review.service.ReviewService;
-import com.example.reviewqueue.review.service.dto.ReviewsData;
+import com.example.reviewqueue.review.domain.Review;
+import com.example.reviewqueue.review.repository.ReviewRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
@@ -20,10 +18,9 @@ import java.util.List;
 @Service
 public class ReviewReminderScheduler {
 
-    private final ReviewService reviewService;
     private final SseService sseService;
 
-    private final MemberRepository memberRepository;
+    private final ReviewRepository reviewRepository;
     private final ReviewReminderRepository reminderRepository;
 
     // TODO :: 나중에 JdbcTemplate을 활용해 벌크 INSERT로 변경하기
@@ -35,15 +32,17 @@ public class ReviewReminderScheduler {
 
     private List<Long> saveReviewReminder() {
         LocalDate today = LocalDate.now();
-        List<Long> memberIds = reviewService.findMemberIdsByReviewDate(today);
-        List<Member> members = memberRepository.findAllById(memberIds);
+        List<Review> reviews = reviewRepository.findAllByReviewDateAndIsCompletedIsFalse(today);
 
-        List<ReviewReminder> reminders = members.stream()
-                .map(member -> new ReviewReminder(today, member))
+        List<ReviewReminder> reminders = reviews.stream()
+                .map(review -> new ReviewReminder(today, review.getMember(), review))
                 .toList();
 
         reminderRepository.saveAll(reminders);
 
-        return memberIds;
+        return reviews.stream()
+                .map(review -> review.getMember().getId())
+                .distinct()
+                .toList();
     }
 }

@@ -77,4 +77,95 @@ class ReviewReminderSchedulerTest {
             .extracting("reminderDate")
             .containsExactlyInAnyOrder(reviewDate);
     }
+
+    @DisplayName("오늘 복습이 여러 개이면 Review마다 Reminder가 각각 생성된다.")
+    @Test
+    void addReminder_multipleReviews() {
+        // given
+        Member member = memberRepository.save(new Member("test2@email.com", "password", "테스터2"));
+        Study study = studyRepository.save(new Study(StudyType.BOOK, "Real MySQL", "MySQL 관련 도서", member));
+        DailyStudy dailyStudy1 = dailyStudyRepository.save(new DailyStudy("8장 인덱스, p200-210", LocalDate.of(2024, 10, 31).atTime(0, 0), study));
+        DailyStudy dailyStudy2 = dailyStudyRepository.save(new DailyStudy("9장 옵티마이저, p300-310", LocalDate.of(2024, 11, 1).atTime(0, 0), study));
+
+        LocalDate today = LocalDate.now();
+        Review review1 = reviewRepository.save(new Review(today.minusDays(1L), today, dailyStudy1));
+        Review review2 = reviewRepository.save(new Review(today.minusDays(2L), today, dailyStudy2));
+
+        // when
+        reviewReminderScheduler.addReminder();
+        List<ReviewReminder> reminders = reviewReminderRepository.findAll();
+
+        // then
+        assertThat(reminders).hasSize(2);
+        assertThat(reminders).extracting(r -> r.getReview().getId())
+                .containsExactlyInAnyOrder(review1.getId(), review2.getId());
+    }
+
+    @DisplayName("완료된 복습에 대해서는 Reminder가 생성되지 않는다.")
+    @Test
+    void addReminder_excludesCompletedReviews() {
+        // given
+        Member member = memberRepository.save(new Member("test3@email.com", "password", "테스터3"));
+        Study study = studyRepository.save(new Study(StudyType.BOOK, "Real MySQL", "MySQL 관련 도서", member));
+        DailyStudy dailyStudy = dailyStudyRepository.save(new DailyStudy("8장 인덱스", LocalDate.of(2024, 10, 31).atTime(0, 0), study));
+
+        LocalDate today = LocalDate.now();
+        Review completedReview = new Review(today.minusDays(1L), today, dailyStudy);
+        completedReview.completeReview();
+        reviewRepository.save(completedReview);
+
+        Review uncompletedReview = reviewRepository.save(new Review(today.minusDays(2L), today, dailyStudy));
+
+        // when
+        reviewReminderScheduler.addReminder();
+        List<ReviewReminder> reminders = reviewReminderRepository.findAll();
+
+        // then
+        assertThat(reminders).hasSize(1);
+        assertThat(reminders.get(0).getReview().getId()).isEqualTo(uncompletedReview.getId());
+    }
+
+    @DisplayName("서로 다른 사용자의 복습에 대해 각각 Reminder가 생성된다.")
+    @Test
+    void addReminder_multipleMembers() {
+        // given
+        Member member1 = memberRepository.save(new Member("user1@email.com", "password", "사용자1"));
+        Member member2 = memberRepository.save(new Member("user2@email.com", "password", "사용자2"));
+        Study study1 = studyRepository.save(new Study(StudyType.BOOK, "Real MySQL", "MySQL 관련 도서", member1));
+        Study study2 = studyRepository.save(new Study(StudyType.LECTURE, "Spring 강의", "좋은 강의", member2));
+        DailyStudy dailyStudy1 = dailyStudyRepository.save(new DailyStudy("8장 인덱스", LocalDate.of(2024, 10, 31).atTime(0, 0), study1));
+        DailyStudy dailyStudy2 = dailyStudyRepository.save(new DailyStudy("1장 IoC", LocalDate.of(2024, 10, 31).atTime(0, 0), study2));
+
+        LocalDate today = LocalDate.now();
+        reviewRepository.save(new Review(today.minusDays(1L), today, dailyStudy1));
+        reviewRepository.save(new Review(today.minusDays(1L), today, dailyStudy2));
+
+        // when
+        reviewReminderScheduler.addReminder();
+        List<ReviewReminder> reminders = reviewReminderRepository.findAll();
+
+        // then
+        assertThat(reminders).hasSize(2);
+        assertThat(reminders).extracting(r -> r.getMember().getId())
+                .containsExactlyInAnyOrder(member1.getId(), member2.getId());
+    }
+
+    @DisplayName("오늘 복습할 내용이 없으면 Reminder가 생성되지 않는다.")
+    @Test
+    void addReminder_noReviewsToday() {
+        // given
+        Member member = memberRepository.save(new Member("test4@email.com", "password", "테스터4"));
+        Study study = studyRepository.save(new Study(StudyType.BOOK, "Real MySQL", "MySQL 관련 도서", member));
+        DailyStudy dailyStudy = dailyStudyRepository.save(new DailyStudy("8장 인덱스", LocalDate.of(2024, 10, 31).atTime(0, 0), study));
+
+        LocalDate tomorrow = LocalDate.now().plusDays(1);
+        reviewRepository.save(new Review(tomorrow.minusDays(1L), tomorrow, dailyStudy));
+
+        // when
+        reviewReminderScheduler.addReminder();
+        List<ReviewReminder> reminders = reviewReminderRepository.findAll();
+
+        // then
+        assertThat(reminders).isEmpty();
+    }
 }

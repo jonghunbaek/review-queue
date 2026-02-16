@@ -8,7 +8,6 @@ import com.example.reviewqueue.review.domain.ReviewCondition;
 import com.example.reviewqueue.review.exception.ReviewException;
 import com.example.reviewqueue.review.repository.ReviewRepository;
 import com.example.reviewqueue.review.service.dto.ReviewData;
-import com.example.reviewqueue.review.service.dto.ReviewGeneralInfo;
 import com.example.reviewqueue.review.service.dto.ReviewQueueSave;
 import com.example.reviewqueue.review.service.dto.ReviewsData;
 import lombok.RequiredArgsConstructor;
@@ -61,18 +60,6 @@ public class ReviewService {
     }
 
     /**
-     *  해당 일에 복습을 해야하는 사용자의 아이디를 모두 찾아 반환한다.
-     */
-    public List<Long> findMemberIdsByReviewDate(LocalDate reviewDate) {
-        List<Review> reviews = reviewRepository.findAllByReviewDate(reviewDate);
-
-        return reviews.stream()
-                .map(review -> review.getMember().getId())
-                .distinct()
-                .toList();
-    }
-
-    /**
      *  단일 복습 조회 (읽기 전용)
      */
     @Transactional(readOnly = true)
@@ -101,14 +88,6 @@ public class ReviewService {
         List<Review> reviews = reviewRepository.findAllByIsCompletedIsFalseAndDailyStudyId(dailyStudy.getId());
 
         return reviews.size() == 1;
-    }
-
-    public List<ReviewGeneralInfo> findAllReviewGeneralInfo(LocalDate reviewDate, Long memberId) {
-        List<Review> reviews = reviewRepository.findAllByReviewDateAndMemberId(reviewDate, memberId);
-
-        return reviews.stream()
-                .map(ReviewGeneralInfo::of)
-                .toList();
     }
 
     public ReviewsData findAllReviewDataBy(LocalDate reviewDate, Long dailyStudyId, Long memberId) {
