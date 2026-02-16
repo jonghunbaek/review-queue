@@ -19,4 +19,13 @@ public abstract class BaseEntity {
 
     @LastModifiedDate
     private LocalDateTime updatedDate;
+
+    private boolean isActive = true;
+
+    private LocalDateTime inactivatedDate;
+
+    public void inactivate() {
+        this.isActive = false;
+        this.inactivatedDate = LocalDateTime.now();
+    }
 }

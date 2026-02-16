@@ -47,4 +47,12 @@ public class DailyStudyController implements DailyStudyApi {
     public List<DailyStudyGeneralInfo> getDailyStudies(@Valid DailyStudySearchCondition searchCondition, @AuthenticatedMember Long memberId) {
         return dailyStudyService.findAllByConditions(searchCondition, memberId);
     }
+
+    /**
+     *  일일 학습 비활성화 (논리 삭제)
+     */
+    @DeleteMapping("/{dailyStudyId}")
+    public void deleteDailyStudy(@PathVariable("dailyStudyId") Long dailyStudyId, @AuthenticatedMember Long memberId) {
+        dailyStudyService.inactivate(dailyStudyId, memberId);
+    }
 }

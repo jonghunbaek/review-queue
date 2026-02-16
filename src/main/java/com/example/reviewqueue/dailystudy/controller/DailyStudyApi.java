@@ -22,4 +22,7 @@ public interface DailyStudyApi {
 
     @Operation(summary = "일일 학습 전체 조회", security = @SecurityRequirement(name = "Bearer Authentication"))
     List<DailyStudyGeneralInfo> getDailyStudies(DailyStudySearchCondition searchCondition, @Parameter(hidden = true) Long memberId);
+
+    @Operation(summary = "일일 학습 비활성화", description = "일일 학습 및 하위 학습키워드, 복습을 모두 비활성화합니다.", security = @SecurityRequirement(name = "Bearer Authentication"))
+    void deleteDailyStudy(@Parameter(description = "일일 학습 ID") Long dailyStudyId, @Parameter(hidden = true) Long memberId);
 }

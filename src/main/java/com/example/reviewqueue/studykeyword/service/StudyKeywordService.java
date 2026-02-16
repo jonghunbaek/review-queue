@@ -40,11 +40,23 @@ public class StudyKeywordService {
     }
 
     public void updateKeyword(StudyKeywordUpdate studyKeywordUpdate, Long studyKeywordId, Long memberId) {
-        StudyKeyword studyKeyword = studyKeywordRepository.findById(studyKeywordId)
-                .orElseThrow(() -> new StudyKeywordException("studyKeywordId :: " + studyKeywordId, E15000));
+        StudyKeyword studyKeyword = findStudyKeywordById(studyKeywordId);
 
         validateAccessPermission(memberId, studyKeyword.getDailyStudy().getStudy().getMember().getId());
 
         studyKeyword.updateKeywords(studyKeywordUpdate.getKeyword(), studyKeywordUpdate.getDescription());
+    }
+
+    public void inactivate(Long studyKeywordId, Long memberId) {
+        StudyKeyword studyKeyword = findStudyKeywordById(studyKeywordId);
+
+        validateAccessPermission(memberId, studyKeyword.getDailyStudy().getStudy().getMember().getId());
+
+        studyKeyword.inactivate();
+    }
+
+    private StudyKeyword findStudyKeywordById(Long studyKeywordId) {
+        return studyKeywordRepository.findById(studyKeywordId)
+                .orElseThrow(() -> new StudyKeywordException("studyKeywordId :: " + studyKeywordId, E15000));
     }
 }

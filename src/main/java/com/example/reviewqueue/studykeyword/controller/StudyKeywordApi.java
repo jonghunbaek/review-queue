@@ -17,4 +17,7 @@ public interface StudyKeywordApi {
 
     @Operation(summary = "학습 키워드 수정", security = @SecurityRequirement(name = "Bearer Authentication"))
     void patchStudyKeyword(StudyKeywordUpdate studyKeywordUpdate, @Parameter(description = "학습 키워드 ID") Long studyKeywordId, @Parameter(hidden = true) Long memberId);
+
+    @Operation(summary = "학습 키워드 비활성화", security = @SecurityRequirement(name = "Bearer Authentication"))
+    void deleteStudyKeyword(@Parameter(description = "학습 키워드 ID") Long studyKeywordId, @Parameter(hidden = true) Long memberId);
 }

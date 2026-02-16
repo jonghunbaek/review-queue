@@ -1,18 +1,19 @@
 package com.example.reviewqueue.studykeyword.domain;
 
 import com.example.reviewqueue.common.domain.BaseEntity;
-import com.example.reviewqueue.common.response.ResponseCode;
 import com.example.reviewqueue.dailystudy.domain.DailyStudy;
 import com.example.reviewqueue.studykeyword.exception.StudyKeywordException;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import org.hibernate.annotations.SQLRestriction;
 
-import static com.example.reviewqueue.common.response.ResponseCode.*;
+import static com.example.reviewqueue.common.response.ResponseCode.E15001;
 
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
+@SQLRestriction("is_active = true")
 @Entity
 public class StudyKeyword extends BaseEntity {
 

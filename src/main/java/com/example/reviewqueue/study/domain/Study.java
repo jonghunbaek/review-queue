@@ -3,14 +3,14 @@ package com.example.reviewqueue.study.domain;
 import com.example.reviewqueue.common.domain.BaseEntity;
 import com.example.reviewqueue.member.domain.Member;
 import jakarta.persistence.*;
-import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.NotNull;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import org.hibernate.annotations.SQLRestriction;
 
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
+@SQLRestriction("is_active = true")
 @Entity
 public class Study extends BaseEntity {
 

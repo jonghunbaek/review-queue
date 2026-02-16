@@ -57,4 +57,12 @@ public class StudyController implements StudyApi {
     public void putStudy(@RequestBody @Valid StudyUpdate studyUpdate, @PathVariable("studyId") Long studyId, @AuthenticatedMember Long memberId) {
         studyService.update(studyUpdate, studyId, memberId);
     }
+
+    /**
+     *  학습 비활성화 (논리 삭제)
+     */
+    @DeleteMapping("/{studyId}")
+    public void deleteStudy(@PathVariable("studyId") Long studyId, @AuthenticatedMember Long memberId) {
+        studyService.inactivate(studyId, memberId);
+    }
 }

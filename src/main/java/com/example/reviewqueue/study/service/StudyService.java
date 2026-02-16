@@ -1,8 +1,12 @@
 package com.example.reviewqueue.study.service;
 
+import com.example.reviewqueue.dailystudy.domain.DailyStudy;
+import com.example.reviewqueue.dailystudy.repository.DailyStudyRepository;
 import com.example.reviewqueue.member.domain.Member;
 import com.example.reviewqueue.member.exception.MemberException;
 import com.example.reviewqueue.member.repository.MemberRepository;
+import com.example.reviewqueue.review.domain.Review;
+import com.example.reviewqueue.review.repository.ReviewRepository;
 import com.example.reviewqueue.study.domain.Study;
 import com.example.reviewqueue.study.domain.StudyType;
 import com.example.reviewqueue.study.exception.StudyException;
@@ -10,7 +14,8 @@ import com.example.reviewqueue.study.repository.StudyRepository;
 import com.example.reviewqueue.study.service.dto.StudyInfo;
 import com.example.reviewqueue.study.service.dto.StudySave;
 import com.example.reviewqueue.study.service.dto.StudyUpdate;
-import jakarta.validation.Valid;
+import com.example.reviewqueue.studykeyword.domain.StudyKeyword;
+import com.example.reviewqueue.studykeyword.repository.StudyKeywordRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -28,6 +33,9 @@ public class StudyService {
 
     private final StudyRepository studyRepository;
     private final MemberRepository memberRepository;
+    private final DailyStudyRepository dailyStudyRepository;
+    private final StudyKeywordRepository studyKeywordRepository;
+    private final ReviewRepository reviewRepository;
 
     public long save(StudySave studySave, Long memberId) {
         Member member = findMemberById(memberId);
@@ -73,8 +81,22 @@ public class StudyService {
         studyUpdate.updateStudy(study);
     }
 
-    public void deleteStudyById(Long studyId) {
-        studyRepository.deleteById(studyId);
+    public void inactivate(Long studyId, Long memberId) {
+        Study study = findStudyById(studyId);
+        validateAccessPermission(memberId, study.getMember().getId());
+
+        study.inactivate();
+
+        List<DailyStudy> dailyStudies = dailyStudyRepository.findAllByStudyId(studyId);
+        List<Long> dailyStudyIds = dailyStudies.stream().map(DailyStudy::getId).toList();
+
+        dailyStudies.forEach(DailyStudy::inactivate);
+
+        studyKeywordRepository.findAllByDailyStudyIdIn(dailyStudyIds)
+                .forEach(StudyKeyword::inactivate);
+
+        reviewRepository.findAllByDailyStudyIdIn(dailyStudyIds)
+                .forEach(Review::inactivate);
     }
 
     private Study findStudyById(Long studyId) {

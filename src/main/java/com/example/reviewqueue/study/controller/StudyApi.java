@@ -24,4 +24,7 @@ public interface StudyApi {
 
     @Operation(summary = "학습 수정", security = @SecurityRequirement(name = "Bearer Authentication"))
     void putStudy(StudyUpdate studyUpdate, @Parameter(description = "학습 ID") Long studyId, @Parameter(hidden = true) Long memberId);
+
+    @Operation(summary = "학습 비활성화", description = "학습 및 하위 일일학습, 학습키워드, 복습을 모두 비활성화합니다.", security = @SecurityRequirement(name = "Bearer Authentication"))
+    void deleteStudy(@Parameter(description = "학습 ID") Long studyId, @Parameter(hidden = true) Long memberId);
 }

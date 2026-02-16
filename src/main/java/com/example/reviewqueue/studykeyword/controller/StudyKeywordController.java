@@ -26,4 +26,9 @@ public class StudyKeywordController implements StudyKeywordApi {
     public void patchStudyKeyword(@RequestBody @Valid StudyKeywordUpdate studyKeywordUpdate, @PathVariable Long studyKeywordId, @AuthenticatedMember Long memberId) {
         studyKeywordService.updateKeyword(studyKeywordUpdate, studyKeywordId, memberId);
     }
+
+    @DeleteMapping("/{studyKeywordId}")
+    public void deleteStudyKeyword(@PathVariable Long studyKeywordId, @AuthenticatedMember Long memberId) {
+        studyKeywordService.inactivate(studyKeywordId, memberId);
+    }
 }

@@ -1,18 +1,24 @@
 package com.example.reviewqueue.dailystudy.service;
 
+import com.example.reviewqueue.common.exception.AccessDeniedException;
 import com.example.reviewqueue.dailystudy.domain.DailyStudy;
+import com.example.reviewqueue.dailystudy.exception.DailyStudyException;
 import com.example.reviewqueue.dailystudy.repository.DailyStudyRepository;
 import com.example.reviewqueue.dailystudy.service.dto.DailyStudyGeneralInfo;
 import com.example.reviewqueue.dailystudy.service.dto.DailyStudySave;
 import com.example.reviewqueue.dailystudy.service.dto.DailyStudySearchCondition;
 import com.example.reviewqueue.member.domain.Member;
 import com.example.reviewqueue.member.repository.MemberRepository;
+import com.example.reviewqueue.review.domain.Review;
+import com.example.reviewqueue.review.repository.ReviewRepository;
 import com.example.reviewqueue.study.domain.Study;
 import com.example.reviewqueue.study.domain.StudyType;
 import com.example.reviewqueue.study.repository.StudyRepository;
+import com.example.reviewqueue.studykeyword.domain.StudyKeyword;
 import com.example.reviewqueue.studykeyword.repository.StudyKeywordRepository;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+import jakarta.persistence.EntityManager;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.ActiveProfiles;
@@ -23,6 +29,8 @@ import java.time.LocalDateTime;
 import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
+import static org.junit.jupiter.api.Assertions.assertAll;
 
 @ActiveProfiles("test")
 @Transactional
@@ -42,7 +50,13 @@ class DailyStudyServiceTest {
     private StudyKeywordRepository studyKeywordRepository;
 
     @Autowired
+    private ReviewRepository reviewRepository;
+
+    @Autowired
     private MemberRepository memberRepository;
+
+    @Autowired
+    private EntityManager entityManager;
 
     @DisplayName("일일 학습과 학습 키워드를 저장한다.")
     @Test
@@ -86,5 +100,58 @@ class DailyStudyServiceTest {
         assertThat(dailyStudies).hasSize(3)
                 .extracting("studyRange")
                 .containsExactlyInAnyOrder("범위1", "범위2", "범위3");
+    }
+
+    @DisplayName("일일 학습을 비활성화하면 연관된 학습 키워드와 복습이 모두 비활성화된다.")
+    @Test
+    void inactivate() {
+        // given
+        Member member = memberRepository.save(new Member("test3@email.com", "password", "테스터3"));
+        Study study = studyRepository.save(new Study(StudyType.BOOK, "Real MySQL", "MySQL 관련 도서", member));
+        DailyStudy dailyStudy = dailyStudyRepository.save(new DailyStudy("범위1", LocalDateTime.of(2024, 12, 15, 0, 0, 0), study));
+
+        studyKeywordRepository.save(new StudyKeyword("인덱스", "B-Tree 인덱스 설명", dailyStudy));
+        studyKeywordRepository.save(new StudyKeyword("트랜잭션", "ACID 설명", dailyStudy));
+
+        reviewRepository.save(new Review(LocalDate.of(2024, 12, 15), LocalDate.of(2024, 12, 16), dailyStudy));
+        reviewRepository.save(new Review(LocalDate.of(2024, 12, 16), LocalDate.of(2024, 12, 17), dailyStudy));
+
+        // when
+        dailyStudyService.inactivate(dailyStudy.getId(), member.getId());
+        entityManager.flush();
+        entityManager.clear();
+
+        // then
+        assertAll(
+                () -> assertThat(dailyStudyRepository.findById(dailyStudy.getId())).isEmpty(),
+                () -> assertThat(studyKeywordRepository.findAllByDailyStudyId(dailyStudy.getId())).isEmpty(),
+                () -> assertThat(reviewRepository.findAllByDailyStudyId(dailyStudy.getId())).isEmpty()
+        );
+    }
+
+    @DisplayName("존재하지 않는 일일 학습을 비활성화하면 예외가 발생한다.")
+    @Test
+    void inactivate_dailyStudyNotFound() {
+        // given
+        Member member = memberRepository.save(new Member("test4@email.com", "password", "테스터4"));
+        Long nonExistentDailyStudyId = 999L;
+
+        // when & then
+        assertThatThrownBy(() -> dailyStudyService.inactivate(nonExistentDailyStudyId, member.getId()))
+                .isInstanceOf(DailyStudyException.class);
+    }
+
+    @DisplayName("다른 회원의 일일 학습을 비활성화하면 접근 권한 예외가 발생한다.")
+    @Test
+    void inactivate_accessDenied() {
+        // given
+        Member owner = memberRepository.save(new Member("owner2@email.com", "password", "소유자"));
+        Member other = memberRepository.save(new Member("other2@email.com", "password", "다른회원"));
+        Study study = studyRepository.save(new Study(StudyType.BOOK, "Real MySQL", "MySQL 관련 도서", owner));
+        DailyStudy dailyStudy = dailyStudyRepository.save(new DailyStudy("범위1", LocalDateTime.of(2024, 12, 15, 0, 0, 0), study));
+
+        // when & then
+        assertThatThrownBy(() -> dailyStudyService.inactivate(dailyStudy.getId(), other.getId()))
+                .isInstanceOf(AccessDeniedException.class);
     }
 }

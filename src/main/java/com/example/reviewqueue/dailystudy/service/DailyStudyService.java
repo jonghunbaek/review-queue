@@ -1,14 +1,15 @@
 package com.example.reviewqueue.dailystudy.service;
 
 import com.example.reviewqueue.dailystudy.domain.DailyStudy;
-import com.example.reviewqueue.studykeyword.domain.StudyKeyword;
 import com.example.reviewqueue.dailystudy.exception.DailyStudyException;
 import com.example.reviewqueue.dailystudy.repository.DailyStudyRepository;
-import com.example.reviewqueue.studykeyword.repository.StudyKeywordRepository;
 import com.example.reviewqueue.dailystudy.service.dto.*;
+import com.example.reviewqueue.review.repository.ReviewRepository;
 import com.example.reviewqueue.study.domain.Study;
 import com.example.reviewqueue.study.exception.StudyException;
 import com.example.reviewqueue.study.repository.StudyRepository;
+import com.example.reviewqueue.studykeyword.domain.StudyKeyword;
+import com.example.reviewqueue.studykeyword.repository.StudyKeywordRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -27,6 +28,7 @@ public class DailyStudyService {
     private final StudyRepository studyRepository;
     private final DailyStudyRepository dailyStudyRepository;
     private final StudyKeywordRepository studyKeywordRepository;
+    private final ReviewRepository reviewRepository;
 
     public DailyStudyGeneralInfo save(DailyStudySave dailyStudySave) {
         Study study = findStudyById(dailyStudySave.getStudyId());
@@ -52,6 +54,21 @@ public class DailyStudyService {
                 .toList();
 
         return new DailyStudyDetailInfo(DailyStudyGeneralInfo.of(dailyStudy), studyKeywordsInfo);
+    }
+
+    public void inactivate(Long dailyStudyId, Long memberId) {
+        DailyStudy dailyStudy = dailyStudyRepository.findById(dailyStudyId)
+                .orElseThrow(() -> new DailyStudyException("dailyStudyId :: " + dailyStudyId, E12000));
+
+        validateAccessPermission(memberId, dailyStudy.getStudy().getMember().getId());
+
+        dailyStudy.inactivate();
+
+        studyKeywordRepository.findAllByDailyStudyId(dailyStudyId)
+                .forEach(StudyKeyword::inactivate);
+
+        reviewRepository.findAllByDailyStudyId(dailyStudyId)
+                .forEach(review -> review.inactivate());
     }
 
     public List<DailyStudyGeneralInfo> findAllByConditions(DailyStudySearchCondition conditions, Long memberId) {

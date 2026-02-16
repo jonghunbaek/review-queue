@@ -8,4 +8,6 @@ import java.util.List;
 public interface StudyKeywordRepository extends JpaRepository<StudyKeyword, Long> {
 
     List<StudyKeyword> findAllByDailyStudyId(Long dailyStudyId);
+
+    List<StudyKeyword> findAllByDailyStudyIdIn(List<Long> dailyStudyIds);
 }
