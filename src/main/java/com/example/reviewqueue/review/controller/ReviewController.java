@@ -26,11 +26,19 @@ public class ReviewController implements ReviewApi {
     }
 
     /**
-     *  복습 단일 조회(마지막 복습 여부 포함), 완료처리
+     *  복습 단일 조회 (읽기 전용)
      */
     @GetMapping("/{reviewId}")
     public ReviewData getreviewData(@PathVariable Long reviewId, @AuthenticatedMember Long memberId) {
         return reviewService.findById(reviewId, memberId);
+    }
+
+    /**
+     *  복습 완료 처리
+     */
+    @PatchMapping("/{reviewId}/completion")
+    public void completeReview(@PathVariable Long reviewId, @AuthenticatedMember Long memberId) {
+        reviewService.completeReview(reviewId, memberId);
     }
 
     /**

@@ -73,16 +73,27 @@ public class ReviewService {
     }
 
     /**
-     *  단일 복습 조회를 하면 해당 복습을 완료한 것으로 처리한다.
+     *  단일 복습 조회 (읽기 전용)
      */
+    @Transactional(readOnly = true)
     public ReviewData findById(Long reviewId, Long memberId) {
         Review review = reviewRepository.findByIdAndIsCompletedIsFalse(reviewId)
                 .orElseThrow(() -> new ReviewException("reviewId :: " + reviewId, E13003));
 
         validateAccessPermission(memberId, review.getMember().getId());
-        review.completeReview();
 
         return ReviewData.from(review, isLastReview(review));
+    }
+
+    /**
+     *  복습 완료 처리
+     */
+    public void completeReview(Long reviewId, Long memberId) {
+        Review review = reviewRepository.findByIdAndIsCompletedIsFalse(reviewId)
+                .orElseThrow(() -> new ReviewException("reviewId :: " + reviewId, E13003));
+
+        validateAccessPermission(memberId, review.getMember().getId());
+        review.completeReview();
     }
 
     private boolean isLastReview(Review review) {
