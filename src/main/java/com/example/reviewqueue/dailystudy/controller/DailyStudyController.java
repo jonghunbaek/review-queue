@@ -6,7 +6,6 @@ import com.example.reviewqueue.dailystudy.service.dto.DailyStudyDetailInfo;
 import com.example.reviewqueue.dailystudy.service.dto.DailyStudyGeneralInfo;
 import com.example.reviewqueue.dailystudy.service.dto.DailyStudySave;
 import com.example.reviewqueue.dailystudy.service.dto.DailyStudySearchCondition;
-import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
@@ -44,7 +43,7 @@ public class DailyStudyController implements DailyStudyApi {
      *  일일 학습 전체 조회 - 학습 아이디 기반
      */
     @GetMapping
-    public List<DailyStudyGeneralInfo> getDailyStudies(@Valid DailyStudySearchCondition searchCondition, @AuthenticatedMember Long memberId) {
+    public List<DailyStudyGeneralInfo> getDailyStudies(DailyStudySearchCondition searchCondition, @AuthenticatedMember Long memberId) {
         return dailyStudyService.findAllByConditions(searchCondition, memberId);
     }
 

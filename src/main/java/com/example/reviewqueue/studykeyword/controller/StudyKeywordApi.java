@@ -6,6 +6,7 @@ import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import jakarta.validation.Valid;
 
 import java.util.List;
 
@@ -16,7 +17,7 @@ public interface StudyKeywordApi {
     void postStudyKeyword(List<StudyKeywordSave> studyKeywordsSave, @Parameter(description = "일일 학습 ID") Long dailyStudyId, @Parameter(hidden = true) Long memberId);
 
     @Operation(summary = "학습 키워드 수정", security = @SecurityRequirement(name = "Bearer Authentication"))
-    void patchStudyKeyword(StudyKeywordUpdate studyKeywordUpdate, @Parameter(description = "학습 키워드 ID") Long studyKeywordId, @Parameter(hidden = true) Long memberId);
+    void patchStudyKeyword(@Valid StudyKeywordUpdate studyKeywordUpdate, @Parameter(description = "학습 키워드 ID") Long studyKeywordId, @Parameter(hidden = true) Long memberId);
 
     @Operation(summary = "학습 키워드 비활성화", security = @SecurityRequirement(name = "Bearer Authentication"))
     void deleteStudyKeyword(@Parameter(description = "학습 키워드 ID") Long studyKeywordId, @Parameter(hidden = true) Long memberId);

@@ -4,7 +4,6 @@ import com.example.reviewqueue.common.resolver.AuthenticatedMember;
 import com.example.reviewqueue.dailystudy.service.dto.StudyKeywordSave;
 import com.example.reviewqueue.studykeyword.service.StudyKeywordService;
 import com.example.reviewqueue.studykeyword.service.dto.StudyKeywordUpdate;
-import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 
@@ -23,7 +22,7 @@ public class StudyKeywordController implements StudyKeywordApi {
     }
 
     @PatchMapping("/{studyKeywordId}")
-    public void patchStudyKeyword(@RequestBody @Valid StudyKeywordUpdate studyKeywordUpdate, @PathVariable Long studyKeywordId, @AuthenticatedMember Long memberId) {
+    public void patchStudyKeyword(@RequestBody StudyKeywordUpdate studyKeywordUpdate, @PathVariable Long studyKeywordId, @AuthenticatedMember Long memberId) {
         studyKeywordService.updateKeyword(studyKeywordUpdate, studyKeywordId, memberId);
     }
 

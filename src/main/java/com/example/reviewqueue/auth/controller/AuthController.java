@@ -5,7 +5,6 @@ import com.example.reviewqueue.auth.service.dto.LoginRequest;
 import com.example.reviewqueue.auth.service.dto.SignupRequest;
 import com.example.reviewqueue.common.jwt.Tokens;
 import com.example.reviewqueue.token.service.TokenService;
-import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.ResponseEntity;
@@ -26,7 +25,7 @@ public class AuthController implements AuthApi {
     private final TokenService tokenService;
 
     @PostMapping("/signup")
-    public ResponseEntity<Void> signup(@Valid @RequestBody SignupRequest request) {
+    public ResponseEntity<Void> signup(@RequestBody SignupRequest request) {
         Long memberId = authService.signUp(request);
         Tokens tokens = tokenService.createTokens(memberId);
         HttpHeaders headers = setUpTokensToCookie(tokens);
@@ -35,7 +34,7 @@ public class AuthController implements AuthApi {
     }
 
     @PostMapping("/login")
-    public ResponseEntity<Void> login(@Valid @RequestBody LoginRequest request) {
+    public ResponseEntity<Void> login(@RequestBody LoginRequest request) {
         Long memberId = authService.signIn(request);
         Tokens tokens = tokenService.createTokens(memberId);
         HttpHeaders headers = setUpTokensToCookie(tokens);

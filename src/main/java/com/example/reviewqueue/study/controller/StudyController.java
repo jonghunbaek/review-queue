@@ -6,7 +6,6 @@ import com.example.reviewqueue.study.domain.StudyType;
 import com.example.reviewqueue.study.service.StudyService;
 import com.example.reviewqueue.study.service.dto.StudyInfo;
 import com.example.reviewqueue.study.service.dto.StudyUpdate;
-import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 
@@ -54,7 +53,7 @@ public class StudyController implements StudyApi {
      *  학습 수정
      */
     @PutMapping("/{studyId}")
-    public void putStudy(@RequestBody @Valid StudyUpdate studyUpdate, @PathVariable("studyId") Long studyId, @AuthenticatedMember Long memberId) {
+    public void putStudy(@RequestBody StudyUpdate studyUpdate, @PathVariable("studyId") Long studyId, @AuthenticatedMember Long memberId) {
         studyService.update(studyUpdate, studyId, memberId);
     }
 
