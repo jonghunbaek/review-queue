@@ -12,7 +12,6 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.List;
 
 import static com.example.reviewqueue.common.response.ResponseCode.E14003;
-import static com.example.reviewqueue.common.util.GlobalValidator.validateAccessPermission;
 
 @Slf4j
 @RequiredArgsConstructor
@@ -28,8 +27,6 @@ public class ReviewReminderService {
         if (reminders.isEmpty()) {
             return List.of();
         }
-
-        validateAccessPermission(memberId, reminders.get(0).getMember().getId());
 
         return reminders.stream()
                 .map(ReminderInfo::from)

@@ -93,8 +93,6 @@ public class ReviewService {
     public ReviewsData findAllReviewDataBy(LocalDate reviewDate, Long dailyStudyId, Long memberId) {
         List<Review> reviews = reviewRepository.findAllByReviewDateAndDailyStudyIdAndMemberId(reviewDate, dailyStudyId, memberId);
 
-        validateAccessPermission(memberId, reviews.get(0).getMember().getId());
-
         return createReviewData(reviews, reviewDate, memberId);
     }
 
