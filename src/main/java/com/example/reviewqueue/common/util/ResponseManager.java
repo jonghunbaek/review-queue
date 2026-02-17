@@ -17,11 +17,11 @@ public class ResponseManager {
     public static final String[] TOKEN_TYPE = {"access_token", "refresh_token"};
     public static final int COOKIE_MAX_AGE = 60 * 60 * 24;
 
-    public static void setUpTokensToCookie(Tokens tokens, HttpServletResponse response) {
+    public static HttpHeaders setUpTokensToCookie(Tokens tokens) {
         ResponseCookie accessTokenCookie = createCookie(TOKEN_TYPE[0], tokens.getAccessToken(), false, COOKIE_MAX_AGE);
         ResponseCookie refreshTokenCookie = createCookie(TOKEN_TYPE[1], tokens.getRefreshToken(), true, COOKIE_MAX_AGE);
 
-        setUpCookie(response, accessTokenCookie, refreshTokenCookie);
+        return createCookieHeaders(accessTokenCookie, refreshTokenCookie);
     }
 
     private static ResponseCookie createCookie(String tokenType, String token, boolean isHttpOnly, long maxAge) {
@@ -34,16 +34,18 @@ public class ResponseManager {
                 .build();
     }
 
-    private static void setUpCookie(HttpServletResponse response, ResponseCookie accessCookie, ResponseCookie refreshCookie) {
-        response.addHeader(HttpHeaders.SET_COOKIE, accessCookie.toString());
-        response.addHeader(HttpHeaders.SET_COOKIE, refreshCookie.toString());
+    private static HttpHeaders createCookieHeaders(ResponseCookie accessCookie, ResponseCookie refreshCookie) {
+        HttpHeaders headers = new HttpHeaders();
+        headers.add(HttpHeaders.SET_COOKIE, accessCookie.toString());
+        headers.add(HttpHeaders.SET_COOKIE, refreshCookie.toString());
+        return headers;
     }
 
-    public static void clearTokensFromCookie(HttpServletResponse response) {
+    public static HttpHeaders clearTokensFromCookie() {
         ResponseCookie accessCookie = createCookie(TOKEN_TYPE[0], "", false, 0);
         ResponseCookie refreshCookie = createCookie(TOKEN_TYPE[1], "", false, 0);
 
-        setUpCookie(response, accessCookie, refreshCookie);
+        return createCookieHeaders(accessCookie, refreshCookie);
     }
 
     public static void setUpResponse(HttpServletResponse response, ResponseForm responseForm, HttpStatus httpStatus) {

@@ -5,9 +5,10 @@ import com.example.reviewqueue.auth.service.dto.LoginRequest;
 import com.example.reviewqueue.auth.service.dto.SignupRequest;
 import com.example.reviewqueue.common.jwt.Tokens;
 import com.example.reviewqueue.token.service.TokenService;
-import jakarta.servlet.http.HttpServletResponse;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -25,23 +26,27 @@ public class AuthController implements AuthApi {
     private final TokenService tokenService;
 
     @PostMapping("/signup")
-    public void signup(@Valid @RequestBody SignupRequest request, HttpServletResponse response) {
+    public ResponseEntity<Void> signup(@Valid @RequestBody SignupRequest request) {
         Long memberId = authService.signUp(request);
         Tokens tokens = tokenService.createTokens(memberId);
+        HttpHeaders headers = setUpTokensToCookie(tokens);
 
-        setUpTokensToCookie(tokens, response);
+        return ResponseEntity.ok().headers(headers).build();
     }
 
     @PostMapping("/login")
-    public void login(@Valid @RequestBody LoginRequest request, HttpServletResponse response) {
+    public ResponseEntity<Void> login(@Valid @RequestBody LoginRequest request) {
         Long memberId = authService.signIn(request);
         Tokens tokens = tokenService.createTokens(memberId);
+        HttpHeaders headers = setUpTokensToCookie(tokens);
 
-        setUpTokensToCookie(tokens, response);
+        return ResponseEntity.ok().headers(headers).build();
     }
 
     @PostMapping("/logout")
-    public void logout(HttpServletResponse response) {
-        clearTokensFromCookie(response);
+    public ResponseEntity<Void> logout() {
+        HttpHeaders headers = clearTokensFromCookie();
+
+        return ResponseEntity.ok().headers(headers).build();
     }
 }
