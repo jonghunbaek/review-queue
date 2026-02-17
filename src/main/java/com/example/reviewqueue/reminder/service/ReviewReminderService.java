@@ -29,8 +29,6 @@ public class ReviewReminderService {
             return List.of();
         }
 
-        validateAccessPermission(memberId, reminders.get(0).getMember().getId());
-
         return reminders.stream()
                 .map(ReminderInfo::from)
                 .toList();
