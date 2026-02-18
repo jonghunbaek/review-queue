@@ -3,25 +3,30 @@ package com.example.reviewqueue.common.exception;
 import com.example.reviewqueue.common.response.ResponseForm;
 import tools.jackson.core.JacksonException;
 import tools.jackson.databind.exc.InvalidFormatException;
+import jakarta.validation.ConstraintViolation;
+import jakarta.validation.ConstraintViolationException;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.TypeMismatchException;
 import org.springframework.http.ResponseEntity;
 import org.springframework.http.converter.HttpMessageNotReadableException;
+import org.springframework.security.authorization.AuthorizationDeniedException;
 import org.springframework.validation.BindException;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.FieldError;
 import org.springframework.validation.ObjectError;
 import org.springframework.web.bind.MethodArgumentNotValidException;
+import org.springframework.web.bind.MissingRequestCookieException;
 import org.springframework.web.bind.MissingServletRequestParameterException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
+import org.springframework.web.context.request.WebRequest;
 import org.springframework.web.method.annotation.MethodArgumentTypeMismatchException;
+import org.springframework.web.servlet.resource.NoResourceFoundException;
 
 import java.util.Map;
 import java.util.stream.Collectors;
 
-import static com.example.reviewqueue.common.response.ResponseCode.E90001;
-import static com.example.reviewqueue.common.response.ResponseCode.E99999;
+import static com.example.reviewqueue.common.response.ResponseCode.*;
 import static org.springframework.http.HttpStatus.INTERNAL_SERVER_ERROR;
 
 @Slf4j
@@ -49,7 +54,7 @@ public class GlobalExceptionHandler {
             return bindingAndMissingErrorsToMap(getField(ex), String.format(DEFAULT_BINDING_EXCEPTION_MESSAGE, ex.getValue()));
         }
 
-        throw new RuntimeException(cause);
+        return Map.of("body", "요청 본문의 형식이 잘못됐거나 존재하지 않습니다.");
     }
 
     private String getField(InvalidFormatException e) {
@@ -152,11 +157,80 @@ public class GlobalExceptionHandler {
         return error.getDefaultMessage();
     }
 
-    private ResponseEntity<?> createInputValidationResponse(Map<String, String> errors) {
-        ResponseForm<Map<String, String>> response = ResponseForm.from(E90001, errors);
+    private ResponseForm<Map<String, String>> createInputValidationResponse(Map<String, String> errors) {
+        return ResponseForm.from(E90001, errors);
+    }
 
-        return ResponseEntity.status(E90001.getHttpStatus())
-                .body(response);
+    /**
+     *  Missing request cookie exception handler(필수 쿠키 누락)
+     */
+    @ExceptionHandler(MissingRequestCookieException.class)
+    public ResponseEntity<?> handleMissingRequestCookie(MissingRequestCookieException e) {
+        log.error("Missing request cookie exception :: ", e);
+
+        return ResponseEntity.status(E00001.getHttpStatus())
+                .body(ResponseForm.of(E00001));
+    }
+
+    /**
+     *  Constraint violation exception handler(제약 조건 위반)
+     */
+    @ExceptionHandler(ConstraintViolationException.class)
+    public ResponseEntity<?> handleConstraintViolationException(ConstraintViolationException e) {
+        log.error("Constraint violation exception :: ", e);
+
+        Map<String, String> errors = e.getConstraintViolations().stream()
+                .collect(Collectors.toMap(
+                        violation -> extractFieldName(violation.getPropertyPath().toString()),
+                        ConstraintViolation::getMessage
+                ));
+
+        return ResponseEntity.badRequest()
+                .body(createInputValidationResponse(errors));
+    }
+
+    /**
+     *  No resource found exception handler(존재하지 않는 경로 요청)
+     */
+    @ExceptionHandler(NoResourceFoundException.class)
+    public ResponseEntity<?> handleNoResourceFoundException(NoResourceFoundException e) {
+        log.error("No resource found exception :: ", e);
+
+        return ResponseEntity.status(E90002.getHttpStatus())
+                .body(ResponseForm.of(E90002));
+    }
+
+    /**
+     *  Authorization denied exception handler(접근 권한 없음)
+     */
+    @ExceptionHandler(AuthorizationDeniedException.class)
+    public ResponseEntity<?> handleAuthorizationDeniedException(AuthorizationDeniedException e) {
+        log.error("Authorization denied exception :: ", e);
+
+        return ResponseEntity.status(E00002.getHttpStatus())
+                .body(ResponseForm.of(E00002));
+    }
+
+    /**
+     *  Illegal argument exception handler(잘못된 인자)
+     */
+    @ExceptionHandler(IllegalArgumentException.class)
+    public ResponseEntity<?> handleIllegalArgumentException(IllegalArgumentException e) {
+        log.error("Illegal argument exception :: ", e);
+
+        return ResponseEntity.badRequest()
+                .body(ResponseForm.from(E90001, e.getLocalizedMessage()));
+    }
+
+    /**
+     *  Illegal state exception handler(잘못된 상태)
+     */
+    @ExceptionHandler(IllegalStateException.class)
+    public ResponseEntity<?> handleIllegalStateException(IllegalStateException e) {
+        log.error("Illegal state exception :: ", e);
+
+        return ResponseEntity.status(INTERNAL_SERVER_ERROR)
+                .body(ResponseForm.of(E99999));
     }
 
     /**
@@ -164,24 +238,24 @@ public class GlobalExceptionHandler {
      */
     @ExceptionHandler(GlobalException.class)
     public ResponseEntity<?> handleGlobalException(GlobalException e) {
-        log.error("e :: ", e);
-
-        ResponseForm<Object> response = ResponseForm.of(e.getResponseCode());
+        logCustomException(e);
 
         return ResponseEntity.status(e.getResponseCode().getHttpStatus())
-                .body(response);
+                .body(ResponseForm.of(e.getResponseCode()));
+    }
+
+    private void logCustomException(GlobalException e) {
+        log.error("GlobalException :: responseCode={}, detailMessage={}", e.getResponseCode(), e.getDetailMessage(), e);
     }
 
     /**
      *  Java default exception handlers
      */
     @ExceptionHandler(Exception.class)
-    public ResponseEntity<?> handleUnexpectedException(Exception e) {
-        log.error("unexpected exception :: ", e);
-
-        ResponseForm<Object> response = ResponseForm.of(E99999);
+    public ResponseEntity<?> handleUnexpectedException(Exception e, WebRequest request) {
+        log.error("unexpected exception :: requestURI={}", request.getDescription(false), e);
 
         return ResponseEntity.status(INTERNAL_SERVER_ERROR)
-                .body(response);
+                .body(ResponseForm.of(E99999));
     }
 }

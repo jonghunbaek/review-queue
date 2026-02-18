@@ -55,6 +55,7 @@ public enum ResponseCode {
 
     E90000("json 파싱 중 문제가 발생했습니다.", INTERNAL_SERVER_ERROR),
     E90001("잘못된 파라미터가 존재합니다.", BAD_REQUEST),
+    E90002("요청한 경로를 찾을 수 없습니다.", NOT_FOUND),
     E99999("예상하지 못한 예외가 발생했습니다.", INTERNAL_SERVER_ERROR)
     ;
 
