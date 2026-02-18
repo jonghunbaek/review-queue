@@ -12,7 +12,6 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.List;
 
 import static com.example.reviewqueue.common.response.ResponseCode.E14003;
-import static com.example.reviewqueue.common.util.GlobalValidator.validateAccessPermission;
 
 @Slf4j
 @RequiredArgsConstructor
