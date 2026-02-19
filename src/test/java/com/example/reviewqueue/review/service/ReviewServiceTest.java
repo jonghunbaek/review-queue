@@ -50,7 +50,7 @@ class ReviewServiceTest {
         Study study = studyRepository.save(new Study(StudyType.BOOK, "Real MySQL", "MySQL 관련 도서", member));
         LocalDate startDate = LocalDate.of(2024, 10, 31);
         DailyStudy dailyStudy = dailyStudyRepository.save(new DailyStudy("학습 1", startDate.atTime(0,0), study));
-        ReviewQueueSave reviewQueueSave = new ReviewQueueSave(dailyStudy.getId(), 5, 1, 2, 3, 4, 5);
+        ReviewQueueSave reviewQueueSave = new ReviewQueueSave(dailyStudy.getId(), List.of(1, 2, 3, 4, 5));
 
         // when
         reviewService.save(reviewQueueSave, member.getId());
