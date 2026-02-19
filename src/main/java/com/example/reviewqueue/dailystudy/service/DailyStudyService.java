@@ -1,5 +1,6 @@
 package com.example.reviewqueue.dailystudy.service;
 
+import com.example.reviewqueue.common.domain.BaseEntity;
 import com.example.reviewqueue.dailystudy.domain.DailyStudy;
 import com.example.reviewqueue.dailystudy.exception.DailyStudyException;
 import com.example.reviewqueue.dailystudy.repository.DailyStudyRepository;
@@ -68,7 +69,7 @@ public class DailyStudyService {
                 .forEach(StudyKeyword::inactivate);
 
         reviewRepository.findAllByDailyStudyId(dailyStudyId)
-                .forEach(review -> review.inactivate());
+                .forEach(BaseEntity::inactivate);
     }
 
     public List<DailyStudyGeneralInfo> findAllByConditions(DailyStudySearchCondition conditions, Long memberId) {
@@ -78,7 +79,9 @@ public class DailyStudyService {
                 conditions.getEndDate(),
                 conditions.isCreateDateSortDesc());
 
-        validateAccessPermission(memberId, dailyStudies.get(0).getStudy().getMember().getId());
+        if (dailyStudies.isEmpty()) return List.of();
+
+        validateAccessPermission(memberId, dailyStudies.getFirst().getStudy().getMember().getId());
 
         return dailyStudies.stream()
                 .map(DailyStudyGeneralInfo::of)

@@ -45,13 +45,13 @@ public class ReviewService {
                 );
 
         // 첫 번째 요소는 초기값이므로 제거
-        reviews.remove(0);
+        reviews.removeFirst();
 
         reviewRepository.saveAll(reviews);
     }
 
     private ArrayList<Review> addNextReview(ArrayList<Review> reviews, int period, DailyStudy dailyStudy) {
-        LocalDate lastReviewDate = reviews.get(reviews.size() - 1).getReviewDate();
+        LocalDate lastReviewDate = reviews.getLast().getReviewDate();
         LocalDate nextReviewDate = lastReviewDate.plusDays(period);
 
         reviews.add(new Review(lastReviewDate, nextReviewDate, dailyStudy));

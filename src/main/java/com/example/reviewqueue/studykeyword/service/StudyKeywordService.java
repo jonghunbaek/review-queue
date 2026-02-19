@@ -1,6 +1,5 @@
 package com.example.reviewqueue.studykeyword.service;
 
-import com.example.reviewqueue.common.response.ResponseCode;
 import com.example.reviewqueue.dailystudy.domain.DailyStudy;
 import com.example.reviewqueue.dailystudy.exception.DailyStudyException;
 import com.example.reviewqueue.dailystudy.repository.DailyStudyRepository;
@@ -15,7 +14,8 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
-import static com.example.reviewqueue.common.response.ResponseCode.*;
+import static com.example.reviewqueue.common.response.ResponseCode.E12000;
+import static com.example.reviewqueue.common.response.ResponseCode.E15000;
 import static com.example.reviewqueue.common.util.GlobalValidator.validateAccessPermission;
 
 @RequiredArgsConstructor

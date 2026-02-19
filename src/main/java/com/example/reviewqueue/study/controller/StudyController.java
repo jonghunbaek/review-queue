@@ -30,10 +30,7 @@ public class StudyController implements StudyApi {
      *  학습 단일 조회
      */
     @GetMapping("/{studyId}")
-    public StudyInfo getStudyById(
-            @PathVariable("studyId") Long studyId,
-            @AuthenticatedMember Long memberId) {
-
+    public StudyInfo getStudyById(@PathVariable Long studyId, @AuthenticatedMember Long memberId) {
         return studyService.findStudyInfoBy(studyId, memberId);
     }
 
@@ -53,7 +50,7 @@ public class StudyController implements StudyApi {
      *  학습 수정
      */
     @PutMapping("/{studyId}")
-    public void putStudy(@RequestBody StudyUpdate studyUpdate, @PathVariable("studyId") Long studyId, @AuthenticatedMember Long memberId) {
+    public void putStudy(@RequestBody StudyUpdate studyUpdate, @PathVariable Long studyId, @AuthenticatedMember Long memberId) {
         studyService.update(studyUpdate, studyId, memberId);
     }
 
@@ -61,7 +58,7 @@ public class StudyController implements StudyApi {
      *  학습 비활성화 (논리 삭제)
      */
     @DeleteMapping("/{studyId}")
-    public void deleteStudy(@PathVariable("studyId") Long studyId, @AuthenticatedMember Long memberId) {
+    public void deleteStudy(@PathVariable Long studyId, @AuthenticatedMember Long memberId) {
         studyService.inactivate(studyId, memberId);
     }
 }

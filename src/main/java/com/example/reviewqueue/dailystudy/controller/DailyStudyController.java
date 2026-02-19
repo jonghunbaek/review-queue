@@ -32,10 +32,7 @@ public class DailyStudyController implements DailyStudyApi {
      *  일일 학습 단일 조회
      */
     @GetMapping("/{dailyStudyId}")
-    public DailyStudyDetailInfo getDailyStudy(
-            @PathVariable("dailyStudyId") Long dailyStudyId,
-            @AuthenticatedMember Long memberId) {
-
+    public DailyStudyDetailInfo getDailyStudy(@PathVariable Long dailyStudyId, @AuthenticatedMember Long memberId) {
         return dailyStudyService.findDailyStudyById(dailyStudyId, memberId);
     }
 
@@ -51,7 +48,7 @@ public class DailyStudyController implements DailyStudyApi {
      *  일일 학습 비활성화 (논리 삭제)
      */
     @DeleteMapping("/{dailyStudyId}")
-    public void deleteDailyStudy(@PathVariable("dailyStudyId") Long dailyStudyId, @AuthenticatedMember Long memberId) {
+    public void deleteDailyStudy(@PathVariable Long dailyStudyId, @AuthenticatedMember Long memberId) {
         dailyStudyService.inactivate(dailyStudyId, memberId);
     }
 }
