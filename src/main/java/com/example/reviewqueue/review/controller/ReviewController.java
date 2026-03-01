@@ -2,13 +2,15 @@ package com.example.reviewqueue.review.controller;
 
 import com.example.reviewqueue.common.resolver.AuthenticatedMember;
 import com.example.reviewqueue.review.service.ReviewService;
-import com.example.reviewqueue.review.service.dto.ReviewData;
-import com.example.reviewqueue.review.service.dto.ReviewQueueSave;
-import com.example.reviewqueue.review.service.dto.ReviewsData;
+import com.example.reviewqueue.review.service.dto.*;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDate;
+import java.util.List;
 
 @RequestMapping("/api/v1/reviews")
 @RequiredArgsConstructor
@@ -39,6 +41,17 @@ public class ReviewController implements ReviewApi {
     @PatchMapping("/{reviewId}/completion")
     public void completeReview(@PathVariable Long reviewId, @AuthenticatedMember Long memberId) {
         reviewService.completeReview(reviewId, memberId);
+    }
+
+    /**
+     *  복습 내역 조회 (기간 + 완료 여부 필터링)
+     */
+    @GetMapping("/history")
+    public ReviewHistoriesItem getReviewHistory(
+            ReviewHistorySearchCondition condition,
+            @PageableDefault(sort = "reviewDate", direction = Sort.Direction.DESC) Pageable pageable,
+            @AuthenticatedMember Long memberId) {
+        return reviewService.findReviewHistory(condition, pageable, memberId);
     }
 
     /**

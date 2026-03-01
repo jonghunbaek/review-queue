@@ -1,5 +1,6 @@
 package com.example.reviewqueue.review.service;
 
+import com.example.reviewqueue.common.domain.Pagination;
 import com.example.reviewqueue.dailystudy.domain.DailyStudy;
 import com.example.reviewqueue.dailystudy.exception.DailyStudyException;
 import com.example.reviewqueue.dailystudy.repository.DailyStudyRepository;
@@ -7,10 +8,10 @@ import com.example.reviewqueue.review.domain.Review;
 import com.example.reviewqueue.review.domain.ReviewCondition;
 import com.example.reviewqueue.review.exception.ReviewException;
 import com.example.reviewqueue.review.repository.ReviewRepository;
-import com.example.reviewqueue.review.service.dto.ReviewData;
-import com.example.reviewqueue.review.service.dto.ReviewQueueSave;
-import com.example.reviewqueue.review.service.dto.ReviewsData;
+import com.example.reviewqueue.review.service.dto.*;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -102,6 +103,18 @@ public class ReviewService {
                 .toList();
 
         return new ReviewsData(memberId, reviewDate, data);
+    }
+
+    @Transactional(readOnly = true)
+    public ReviewHistoriesItem findReviewHistory(ReviewHistorySearchCondition condition, Pageable pageable, Long memberId) {
+        Page<Review> results = reviewRepository.findAllByHistory(condition.toQueryCondition(memberId), pageable);
+        List<ReviewHistoryItem> histories = results.stream()
+                .map(ReviewHistoryItem::of)
+                .toList();
+
+        Pagination pagination = new Pagination(results.getTotalPages(), results.getTotalElements(), pageable.getPageNumber() + 1);
+
+        return new ReviewHistoriesItem(histories, pagination);
     }
 
     private DailyStudy findDailyStudyBy(Long dailStudyId) {

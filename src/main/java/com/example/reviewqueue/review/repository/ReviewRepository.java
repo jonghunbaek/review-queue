@@ -7,7 +7,7 @@ import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
 
-public interface ReviewRepository extends JpaRepository<Review, Long> {
+public interface ReviewRepository extends JpaRepository<Review, Long>, ReviewQueryDslRepository {
 
     Optional<Review> findByIdAndIsCompletedIsFalse(Long reviewId);
     List<Review> findAllByIsCompletedIsFalseAndDailyStudyId(Long dailyStudyId);

@@ -130,6 +130,15 @@ domain/
 **QueryDSL Usage:**
 - Complex queries use QueryDSL (Q-classes generated from entities)
 - Repository interfaces extend `JpaRepository` and custom QueryDSL repositories
+- QueryDSL repository naming: interface `{Domain}QueryDslRepository`, impl `{Domain}QueryDslRepositoryImpl`
+- JPA repository extends both `JpaRepository` and `{Domain}QueryDslRepository`
+
+**SearchCondition Pattern:**
+- When a query has 3+ parameters, wrap them in a `*SearchCondition` object
+- Location: `{domain}/service/dto/{Domain}SearchCondition.java`
+- Default values are set in the constructor (null check → assign default)
+- Reference: `DailyStudySearchCondition.java`, `ReviewHistorySearchCondition.java`
+- Dependency direction: Controller → Service (passes SearchCondition) → Repository (Service unpacks fields)
 
 **Testing:**
 - Tests use `test` profile with H2 database

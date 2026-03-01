@@ -1,5 +1,6 @@
 package com.example.reviewqueue.common.config.querydsl;
 
+import com.example.reviewqueue.common.util.QuerydslResolver;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import jakarta.persistence.EntityManager;
 import lombok.RequiredArgsConstructor;
@@ -15,5 +16,10 @@ public class QuerydslConfig {
     @Bean
     public JPAQueryFactory jpaQueryFactory() {
         return new JPAQueryFactory(entityManager);
+    }
+
+    @Bean
+    public QuerydslResolver querydslResolver() {
+        return new QuerydslResolver();
     }
 }

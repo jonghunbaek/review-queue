@@ -6,6 +6,7 @@ import com.example.reviewqueue.dailystudy.repository.DailyStudyRepository;
 import com.example.reviewqueue.member.domain.Member;
 import com.example.reviewqueue.member.repository.MemberRepository;
 import com.example.reviewqueue.review.domain.Review;
+import com.example.reviewqueue.review.repository.dto.ReviewHistoryQueryCondition;
 import com.example.reviewqueue.study.domain.Study;
 import com.example.reviewqueue.study.domain.StudyType;
 import com.example.reviewqueue.study.repository.StudyRepository;
@@ -16,6 +17,10 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.data.jpa.test.autoconfigure.DataJpaTest;
 import org.springframework.context.annotation.Import;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.test.context.ActiveProfiles;
 
 import java.time.LocalDate;
@@ -139,6 +144,161 @@ class ReviewRepositoryTest {
 
         // then
         assertThat(reviews).isEmpty();
+    }
+
+    @DisplayName("기간 내 모든 복습을 조회한다 (isCompleted=null이면 완료/미완료 모두 반환).")
+    @Test
+    void findAllByHistory_all() {
+        // given
+        Member member = memberRepository.save(new Member("history1@email.com", "password", "히스토리1"));
+        Study study = studyRepository.save(new Study(StudyType.BOOK, "테스트 도서", "설명", member));
+        DailyStudy dailyStudy = dailyStudyRepository.save(new DailyStudy("범위", LocalDate.of(2024, 11, 1).atTime(0, 0), study));
+
+        LocalDate inRange = LocalDate.of(2024, 11, 10);
+        Review completed = new Review(LocalDate.of(2024, 11, 9), inRange, dailyStudy);
+        Review incomplete = new Review(LocalDate.of(2024, 11, 9), inRange, dailyStudy);
+        completed.completeReview();
+        reviewRepository.saveAll(List.of(completed, incomplete));
+
+        ReviewHistoryQueryCondition condition = new ReviewHistoryQueryCondition(
+                member.getId(), null, LocalDate.of(2024, 11, 1), LocalDate.of(2024, 11, 30));
+        Pageable pageable = PageRequest.of(0, 10, Sort.by("reviewDate").descending());
+
+        // when
+        Page<Review> result = reviewRepository.findAllByHistory(condition, pageable);
+
+        // then
+        assertThat(result.getContent()).hasSize(2);
+        assertThat(result.getTotalElements()).isEqualTo(2);
+    }
+
+    @DisplayName("isCompleted=true이면 완료된 복습만 반환한다.")
+    @Test
+    void findAllByHistory_completedOnly() {
+        // given
+        Member member = memberRepository.save(new Member("history2@email.com", "password", "히스토리2"));
+        Study study = studyRepository.save(new Study(StudyType.BOOK, "테스트 도서", "설명", member));
+        DailyStudy dailyStudy = dailyStudyRepository.save(new DailyStudy("범위", LocalDate.of(2024, 11, 1).atTime(0, 0), study));
+
+        LocalDate inRange = LocalDate.of(2024, 11, 10);
+        Review completed = new Review(LocalDate.of(2024, 11, 9), inRange, dailyStudy);
+        Review incomplete = new Review(LocalDate.of(2024, 11, 9), inRange, dailyStudy);
+        completed.completeReview();
+        reviewRepository.saveAll(List.of(completed, incomplete));
+
+        ReviewHistoryQueryCondition condition = new ReviewHistoryQueryCondition(
+                member.getId(), true, LocalDate.of(2024, 11, 1), LocalDate.of(2024, 11, 30));
+        Pageable pageable = PageRequest.of(0, 10, Sort.by("reviewDate").descending());
+
+        // when
+        Page<Review> result = reviewRepository.findAllByHistory(condition, pageable);
+
+        // then
+        assertThat(result.getContent()).hasSize(1);
+        assertThat(result.getContent().get(0).isCompleted()).isTrue();
+    }
+
+    @DisplayName("isCompleted=false이면 미완료 복습만 반환한다.")
+    @Test
+    void findAllByHistory_incompleteOnly() {
+        // given
+        Member member = memberRepository.save(new Member("history3@email.com", "password", "히스토리3"));
+        Study study = studyRepository.save(new Study(StudyType.BOOK, "테스트 도서", "설명", member));
+        DailyStudy dailyStudy = dailyStudyRepository.save(new DailyStudy("범위", LocalDate.of(2024, 11, 1).atTime(0, 0), study));
+
+        LocalDate inRange = LocalDate.of(2024, 11, 10);
+        Review completed = new Review(LocalDate.of(2024, 11, 9), inRange, dailyStudy);
+        Review incomplete = new Review(LocalDate.of(2024, 11, 9), inRange, dailyStudy);
+        completed.completeReview();
+        reviewRepository.saveAll(List.of(completed, incomplete));
+
+        ReviewHistoryQueryCondition condition = new ReviewHistoryQueryCondition(
+                member.getId(), false, LocalDate.of(2024, 11, 1), LocalDate.of(2024, 11, 30));
+        Pageable pageable = PageRequest.of(0, 10, Sort.by("reviewDate").descending());
+
+        // when
+        Page<Review> result = reviewRepository.findAllByHistory(condition, pageable);
+
+        // then
+        assertThat(result.getContent()).hasSize(1);
+        assertThat(result.getContent().get(0).isCompleted()).isFalse();
+    }
+
+    @DisplayName("기간 밖의 복습은 조회되지 않는다.")
+    @Test
+    void findAllByHistory_outOfRange() {
+        // given
+        Member member = memberRepository.save(new Member("history4@email.com", "password", "히스토리4"));
+        Study study = studyRepository.save(new Study(StudyType.BOOK, "테스트 도서", "설명", member));
+        DailyStudy dailyStudy = dailyStudyRepository.save(new DailyStudy("범위", LocalDate.of(2024, 10, 1).atTime(0, 0), study));
+
+        reviewRepository.save(new Review(LocalDate.of(2024, 10, 1), LocalDate.of(2024, 10, 5), dailyStudy));
+
+        ReviewHistoryQueryCondition condition = new ReviewHistoryQueryCondition(
+                member.getId(), null, LocalDate.of(2024, 11, 1), LocalDate.of(2024, 11, 30));
+        Pageable pageable = PageRequest.of(0, 10, Sort.by("reviewDate").descending());
+
+        // when
+        Page<Review> result = reviewRepository.findAllByHistory(condition, pageable);
+
+        // then
+        assertThat(result.getContent()).isEmpty();
+        assertThat(result.getTotalElements()).isZero();
+    }
+
+    @DisplayName("다른 멤버의 복습은 조회되지 않는다.")
+    @Test
+    void findAllByHistory_otherMemberExcluded() {
+        // given
+        Member member1 = memberRepository.save(new Member("history5a@email.com", "password", "히스토리5A"));
+        Member member2 = memberRepository.save(new Member("history5b@email.com", "password", "히스토리5B"));
+        Study study1 = studyRepository.save(new Study(StudyType.BOOK, "도서1", "설명", member1));
+        Study study2 = studyRepository.save(new Study(StudyType.BOOK, "도서2", "설명", member2));
+        DailyStudy dailyStudy1 = dailyStudyRepository.save(new DailyStudy("범위1", LocalDate.of(2024, 11, 1).atTime(0, 0), study1));
+        DailyStudy dailyStudy2 = dailyStudyRepository.save(new DailyStudy("범위2", LocalDate.of(2024, 11, 1).atTime(0, 0), study2));
+
+        LocalDate inRange = LocalDate.of(2024, 11, 10);
+        reviewRepository.save(new Review(LocalDate.of(2024, 11, 9), inRange, dailyStudy1));
+        reviewRepository.save(new Review(LocalDate.of(2024, 11, 9), inRange, dailyStudy2));
+
+        ReviewHistoryQueryCondition condition = new ReviewHistoryQueryCondition(
+                member1.getId(), null, LocalDate.of(2024, 11, 1), LocalDate.of(2024, 11, 30));
+        Pageable pageable = PageRequest.of(0, 10, Sort.by("reviewDate").descending());
+
+        // when
+        Page<Review> result = reviewRepository.findAllByHistory(condition, pageable);
+
+        // then
+        assertThat(result.getContent()).hasSize(1);
+        assertThat(result.getContent().get(0).getMember().getId()).isEqualTo(member1.getId());
+    }
+
+    @DisplayName("페이지 크기보다 데이터가 많으면 페이징이 적용된다.")
+    @Test
+    void findAllByHistory_pagination() {
+        // given
+        Member member = memberRepository.save(new Member("history6@email.com", "password", "히스토리6"));
+        Study study = studyRepository.save(new Study(StudyType.BOOK, "테스트 도서", "설명", member));
+        DailyStudy dailyStudy = dailyStudyRepository.save(new DailyStudy("범위", LocalDate.of(2024, 11, 1).atTime(0, 0), study));
+
+        for (int i = 1; i <= 5; i++) {
+            LocalDate reviewDate = LocalDate.of(2024, 11, i + 1);
+            reviewRepository.save(new Review(LocalDate.of(2024, 11, i), reviewDate, dailyStudy));
+        }
+
+        ReviewHistoryQueryCondition condition = new ReviewHistoryQueryCondition(
+                member.getId(), null, LocalDate.of(2024, 11, 1), LocalDate.of(2024, 11, 30));
+        Pageable pageable = PageRequest.of(0, 3, Sort.by("reviewDate").descending());
+
+        // when
+        Page<Review> result = reviewRepository.findAllByHistory(condition, pageable);
+
+        // then
+        assertThat(result.getContent()).hasSize(3);
+        assertThat(result.getTotalElements()).isEqualTo(5);
+        assertThat(result.getTotalPages()).isEqualTo(2);
+        assertThat(result.isFirst()).isTrue();
+        assertThat(result.isLast()).isFalse();
     }
 
     @DisplayName("일일 학습 아이디로 완료하지 않은 모든 복습을 조회한다.")
